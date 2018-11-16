@@ -8,9 +8,9 @@ class ImagePanel(wx.Panel):
         super(ImagePanel, self).__init__(parent)
         self.max_size = 240
 
-        img = wx.EmptyImage(240,240)
+        img = wx.Image(240,240)
         self.image_ctrl = wx.StaticBitmap(self, 
-                                          bitmap=wx.BitmapFromImage(img))
+                                          bitmap=wx.Bitmap(img))
 
         browse_btn = wx.Button(self, label='Browse')
         browse_btn.Bind(wx.EVT_BUTTON, self.on_browse)
@@ -61,7 +61,7 @@ class ImagePanel(wx.Panel):
             NewW = self.max_size * W / H
         img = img.Scale(NewW,NewH)
         
-        self.image_ctrl.SetBitmap(wx.BitmapFromImage(img))
+        self.image_ctrl.SetBitmap(wx.Bitmap(img))
         self.Refresh()
 
 

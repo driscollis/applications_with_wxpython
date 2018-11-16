@@ -7,9 +7,9 @@ class ImagePanel(wx.Panel):
     def __init__(self, parent):
         super(ImagePanel, self).__init__(parent)
 
-        img = wx.EmptyImage(240,240)
+        img = wx.Image(240,240)
         self.image_ctrl = wx.StaticBitmap(self, 
-                                          bitmap=wx.BitmapFromImage(img))
+                                          bitmap=wx.Bitmap(img))
         
         browse_btn = wx.Button(self, label='Browse')
         browse_btn.Bind(wx.EVT_BUTTON, self.on_browse)
