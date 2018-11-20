@@ -17,9 +17,6 @@ class ImagePanel(wx.Panel):
         self.slideshow_timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.on_next, self.slideshow_timer)
         
-    def blah(self, event):
-        print('bleh')
-        
     def layout(self):
         """
         Layout the widgets on the panel
@@ -57,7 +54,14 @@ class ImagePanel(wx.Panel):
         """
         Loads the next picture in the directory
         """
-        self.next_photo()
+        if not self.photos:
+            return
+        
+        if self.current_photo == self.total_photos - 1:
+            self.current_photo = 0
+        else:
+            self.current_photo += 1
+        self.update_photo(self.photos[self.current_photo])
     
     def on_previous(self, event):
         """
@@ -85,19 +89,6 @@ class ImagePanel(wx.Panel):
             self.slideshow_timer.Stop()
             btn.SetLabel("Slide Show")
             
-    def next_photo(self):
-        """
-        Display the next photo in the folder
-        """
-        if not self.photos:
-            return
-        
-        if self.current_photo == self.total_photos - 1:
-            self.current_photo = 0
-        else:
-            self.current_photo += 1
-        self.update_photo(self.photos[self.current_photo])
-    
     def update_photo(self, image):
         """
         Update the currently shown photo
