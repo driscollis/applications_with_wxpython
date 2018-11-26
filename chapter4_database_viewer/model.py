@@ -15,7 +15,7 @@ class Book(Base):
     """
     __tablename__ = "books"
  
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     title = Column(String)
     author = Column(String)
     
@@ -28,7 +28,7 @@ class Character(Base):
     """"""
     __tablename__ = "characters"
  
-    id = Column(Integer, primary_key = True)
+    id = Column(Integer, primary_key=True)
     first_name = Column(String)
     last_name = Column(String)
     book_id = Column(ForeignKey("books.id"))
@@ -48,7 +48,7 @@ class Character(Base):
     
     def __repr__(self):
         """
-        Overrise the official string representation of Character
+        Override the official string representation of Character
         """
         return "<Character('%s')>" % self.fullname
     
