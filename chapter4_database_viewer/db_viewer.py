@@ -22,13 +22,9 @@ class MainPanel(wx.Panel):
         self.db_data = []
         self.current_directory = os.getcwd()
     
-        self.dataOlv = ObjectListView(self, wx.ID_ANY, 
+        self.dataOlv = ObjectListView(self, 
                                       style=wx.LC_REPORT|wx.SUNKEN_BORDER)
-        self.dataOlv.Hide()
-    
-        # Allow the cell values to be edited when double-clicked
-        self.dataOlv.cellEditMode = ObjectListView.CELLEDIT_SINGLECLICK
-    
+        
         # load DB
         loadDBBtn = wx.Button(self, label="Load DB")
         loadDBBtn.Bind(wx.EVT_BUTTON, self.loadDatabase)
@@ -37,13 +33,13 @@ class MainPanel(wx.Panel):
         self.tableCbo.Bind(wx.EVT_COMBOBOX, self.loadTable)
     
         # Create some sizers
-        mainSizer = wx.BoxSizer(wx.VERTICAL)
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
     
-        mainSizer.Add(loadDBBtn, 0, wx.ALL|wx.CENTER, 5)
-        mainSizer.Add(self.tableCbo, 0, wx.ALL|wx.CENTER, 5)
-        mainSizer.Add(self.dataOlv, 1, wx.ALL|wx.EXPAND, 5)
+        main_sizer.Add(loadDBBtn, 0, wx.ALL|wx.CENTER, 5)
+        main_sizer.Add(self.tableCbo, 0, wx.ALL|wx.CENTER, 5)
+        main_sizer.Add(self.dataOlv, 1, wx.ALL|wx.EXPAND, 5)
     
-        self.SetSizer(mainSizer)
+        self.SetSizer(main_sizer)
         
     def loadTable(self, event):
         """
@@ -62,7 +58,6 @@ class MainPanel(wx.Panel):
         self.db_data = session.query(GenericDBClass).all()
     
         self.setData()
-        self.dataOlv.Show()
         self.Layout()
         
     def loadDatabase(self, event):
