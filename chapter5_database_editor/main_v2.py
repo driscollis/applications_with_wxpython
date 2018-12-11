@@ -14,7 +14,7 @@ class BookPanel(wx.Panel):
     """
     
     def __init__(self, parent):
-        super(BookPanel, self).__init__(parent)
+        super().__init__(parent)
         
         if not os.path.exists("books.db"):
             controller.setup_database()
@@ -121,7 +121,7 @@ class BookFrame(wx.Frame):
 
     def __init__(self):
         """Constructor"""
-        super(BookFrame, self).__init__(
+        super().__init__(
             None, title="Media Organizer",
             size=(800, 600))
         panel = BookPanel(self)
