@@ -86,12 +86,12 @@ def get_all_records(session):
     return books
  
 
-def search_records(session, filterChoice, keyword):
+def search_records(session, filter_choice, keyword):
     """
     Searches the database based on the filter chosen and the keyword
     given by the user
     """
-    if filterChoice == "Author":
+    if filter_choice == "Author":
         qry = session.query(Person)
         result = qry.filter(Person.first_name.contains('%s' % keyword)).all()
         records = []
@@ -99,10 +99,10 @@ def search_records(session, filterChoice, keyword):
             for book in record.books:
                 records.append(book)
         result = records
-    elif filterChoice == "Title":
+    elif filter_choice == "Title":
         qry = session.query(Book)
         result = qry.filter(Book.title.contains('%s' % keyword)).all()
-    elif filterChoice == "ISBN":
+    elif filter_choice == "ISBN":
         qry = session.query(Book)
         result = qry.filter(Book.isbn.contains('%s' % keyword)).all()
     else:
