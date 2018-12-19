@@ -9,11 +9,12 @@ class RecordDialog(wx.Dialog):
     Add / Modify Record dialog
     """
 
-    def __init__(self, row=None, title="Add", addRecord=True):
+    def __init__(self, session, row=None, title="Add", addRecord=True):
         """Constructor"""
         super().__init__(None, title="%s Record" % title)
         self.addRecord = addRecord
         self.selectedRow = row
+        self.session = session
         if row:
             bTitle = self.selectedRow.title
             fName = self.selectedRow.first_name
@@ -110,7 +111,7 @@ class RecordDialog(wx.Dialog):
         """
         authorDict, bookDict = self.get_data()
         data = ({"author":authorDict, "book":bookDict})
-        controller.addRecord(data)
+        controller.add_record(self.session, data)
         
         # show dialog upon completion
         show_message("Book Added",
@@ -132,8 +133,8 @@ class RecordDialog(wx.Dialog):
         Edit a record in the database
         """
         authorDict, bookDict = self.get_data()
-        comboDict = dict(authorDict.items() + bookDict.items())
-        controller.editRecord(self.selectedRow.id, comboDict)
+        comboDict = {**authorDict, **bookDict}
+        controller.edit_record(self.session, self.selectedRow.id, comboDict)
         show_message("Book Edited Successfully!", "Success",
                        wx.ICON_INFORMATION)
         self.Destroy()

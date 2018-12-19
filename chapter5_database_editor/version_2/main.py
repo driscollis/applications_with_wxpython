@@ -1,6 +1,7 @@
 # main.py
 
 import controller
+import dialogs
 import os
 import wx
 
@@ -62,7 +63,7 @@ class BookPanel(wx.Panel):
         btn_sizer.Add(delete_record_btn, 0, wx.ALL, 5)
     
         show_all_btn = wx.Button(self, label="Show All")
-        show_all_btn.Bind(wx.EVT_BUTTON, self.show_all_records)
+        show_all_btn.Bind(wx.EVT_BUTTON, self.on_show_all)
         btn_sizer.Add(show_all_btn, 0, wx.ALL, 5)
     
         main_sizer.Add(search_sizer)
@@ -74,32 +75,61 @@ class BookPanel(wx.Panel):
         """
         Add a record to the database
         """
-        pass
+        dlg = dialogs.RecordDialog(self.session)
+        dlg.ShowModal()
+        dlg.Destroy()
+        self.show_all_records()
     
     def edit_record(self, event):
         """
         Edit a record
         """
-        pass
+        selected_row = self.book_results_olv.GetSelectedObject()
+        if selected_row is None:
+            dialogs.show_message('No row selected!', 'Error')
+            return
+        dlg = dialogs.RecordDialog(self.session,
+                                   selected_row, 
+                                   title='Modify',
+                                   addRecord=False)
+        dlg.ShowModal()
+        dlg.Destroy()
+        self.show_all_records()
     
     def delete_record(self, event):
         """
         Delete a record
         """
-        pass
+        selected_row = self.book_results_olv.GetSelectedObject()
+        if selected_row is None:
+            dialogs.show_message('No row selected!', 'Error')
+            return
+        controller.delete_record(self.session, selected_row.id)
+        self.show_all_records()
     
-    def show_all_records(self, event):
+    def show_all_records(self):
         """
         Updates the record list to show all of them
         """
-        pass
+        self.book_results = controller.get_all_records(self.session)
+        self.update_book_results()
     
     def search(self, event):
         """
         Searches database based on the user's filter 
         choice and keyword
         """
-        pass
+        filter_choice = self.categories.GetValue()
+        keyword = self.search_ctrl.GetValue()
+        self.book_results = controller.search_records(
+            self.session, filter_choice, keyword)
+        self.update_book_results()
+    
+    def on_show_all(self, event):
+        """
+        Updates the record list to show all the records
+        """
+        self.show_all_records()
     
     def update_book_results(self):
         """

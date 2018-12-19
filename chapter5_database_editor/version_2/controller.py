@@ -82,7 +82,7 @@ def get_all_records(session):
     Get all records and return them
     """
     result = session.query(Book).all()
-    books = convertResults(result)
+    books = convert_results(result)
     return books
  
 
@@ -108,7 +108,7 @@ def search_records(session, filter_choice, keyword):
     else:
         qry = session.query(Book)
         result = qry.filter(Book.publisher.contains('%s' % keyword)).all()
-    books = convertResults(result)
+    books = convert_results(result)
     
     return books
 
