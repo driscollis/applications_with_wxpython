@@ -11,7 +11,7 @@ class RecordDialog(wx.Dialog):
 
     def __init__(self, row=None, title="Add", addRecord=True):
         """Constructor"""
-        wx.Dialog.__init__(self, None, title="%s Record" % title)
+        super().__init__(None, title="%s Record" % title)
         self.addRecord = addRecord
         self.selectedRow = row
         if row:
@@ -171,6 +171,6 @@ def show_message(message, caption, flag=wx.ICON_ERROR):
 
 if __name__ == "__main__":
     app = wx.App(False)
-    dlg = AddRecDialog()
+    dlg = RecordDialog()
     dlg.ShowModal()
     app.MainLoop()

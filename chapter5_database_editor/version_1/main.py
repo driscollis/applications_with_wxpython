@@ -11,7 +11,7 @@ class BookPanel(wx.Panel):
     """
     
     def __init__(self, parent):
-        super(BookPanel, self).__init__(parent)
+        super().__init__(parent)
         
         self.book_results = []
     
