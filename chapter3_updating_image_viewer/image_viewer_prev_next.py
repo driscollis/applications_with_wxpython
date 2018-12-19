@@ -7,7 +7,7 @@ import wx
 class ImagePanel(wx.Panel):
 
     def __init__(self, parent):
-        super(ImagePanel, self).__init__(parent)
+        super().__init__(parent)
         self.max_size = 240
         self.photos = []
         self.current_photo = 0
@@ -99,7 +99,7 @@ class ImagePanel(wx.Panel):
 class MainFrame(wx.Frame):
 
     def __init__(self):
-        super(MainFrame, self).__init__(None, title='Image Viewer',
+        super().__init__(None, title='Image Viewer',
                                         size=(400, 400))
         self.panel = ImagePanel(self)
         self.create_toolbar()
