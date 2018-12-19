@@ -6,7 +6,7 @@ import wx
 class MyFrame(wx.Frame):
     
     def __init__(self):
-        super(MyFrame, self).__init__(None, title='Hello World')
+        super().__init__(None, title='Hello World')
         self.Show()
 
 
