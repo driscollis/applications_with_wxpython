@@ -5,7 +5,7 @@ import wx
 class ImagePanel(wx.Panel):
     
     def __init__(self, parent):
-        super(ImagePanel, self).__init__(parent)
+        super().__init__(parent)
         
         img = wx.Image(240,240)
         self.image_ctrl = wx.StaticBitmap(self, 
@@ -23,7 +23,7 @@ class ImagePanel(wx.Panel):
 class MainFrame(wx.Frame):
     
     def __init__(self):
-        super(MainFrame, self).__init__(None, title='Image Viewer')
+        super().__init__(None, title='Image Viewer')
         panel = ImagePanel(self)
         self.Show()
 
