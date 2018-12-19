@@ -27,52 +27,52 @@ class RecordDialog(wx.Dialog):
         font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD) 
         
         # create the sizers
-        mainSizer = wx.BoxSizer(wx.VERTICAL)
-        authorSizer = wx.BoxSizer(wx.HORIZONTAL)
-        btnSizer = wx.BoxSizer(wx.HORIZONTAL)
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        author_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        btn_sizer = wx.BoxSizer(wx.HORIZONTAL)
                 
         # create some widgets
         lbl = wx.StaticText(self, label="New Record")
         lbl.SetFont(font)
-        mainSizer.Add(lbl, 0, wx.CENTER)
+        main_sizer.Add(lbl, 0, wx.CENTER)
         
         font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD) 
-        titleLbl = wx.StaticText(self, label="Title:", size=size)
-        titleLbl.SetFont(font)
-        self.titleTxt = wx.TextCtrl(self, value=bTitle)
-        mainSizer.Add(self.row_builder([titleLbl, self.titleTxt]), 
+        title_lbl = wx.StaticText(self, label="Title:", size=size)
+        title_lbl.SetFont(font)
+        self.title_txt = wx.TextCtrl(self, value=bTitle)
+        main_sizer.Add(self.row_builder([title_lbl, self.title_txt]), 
                       0, wx.EXPAND)
         
-        authorLbl = wx.StaticText(self, label="Author:", size=size)
-        authorLbl.SetFont(font)
-        authorSizer.Add(authorLbl, 0, wx.ALL, 5)
-        self.authorFirstTxt = wx.TextCtrl(self, value=fName)
-        authorSizer.Add(self.authorFirstTxt, 1, wx.EXPAND|wx.ALL, 5)
-        self.authorLastTxt = wx.TextCtrl(self, value=lName)
-        authorSizer.Add(self.authorLastTxt, 1, wx.EXPAND|wx.ALL, 5)
-        mainSizer.Add(authorSizer, 0, wx.EXPAND)
+        author_lbl = wx.StaticText(self, label="Author:", size=size)
+        author_lbl.SetFont(font)
+        author_sizer.Add(author_lbl, 0, wx.ALL, 5)
+        self.author_first_txt = wx.TextCtrl(self, value=fName)
+        author_sizer.Add(self.author_first_txt, 1, wx.EXPAND|wx.ALL, 5)
+        self.author_last_txt = wx.TextCtrl(self, value=lName)
+        author_sizer.Add(self.author_last_txt, 1, wx.EXPAND|wx.ALL, 5)
+        main_sizer.Add(author_sizer, 0, wx.EXPAND)
         
-        isbnLbl = wx.StaticText(self, label="ISBN:", size=size)
-        isbnLbl.SetFont(font)
-        self.isbnTxt = wx.TextCtrl(self, value=isbn)
-        mainSizer.Add(self.row_builder([isbnLbl, self.isbnTxt]),
+        isbn_lbl = wx.StaticText(self, label="ISBN:", size=size)
+        isbn_lbl.SetFont(font)
+        self.isbn_txt = wx.TextCtrl(self, value=isbn)
+        main_sizer.Add(self.row_builder([isbn_lbl, self.isbn_txt]),
                       0, wx.EXPAND)
         
-        publisherLbl = wx.StaticText(self, label="Publisher:", size=size)
-        publisherLbl.SetFont(font)
-        self.publisherTxt = wx.TextCtrl(self, value=publisher)
-        mainSizer.Add(self.row_builder([publisherLbl, self.publisherTxt]),
+        publisher_lbl = wx.StaticText(self, label="Publisher:", size=size)
+        publisher_lbl.SetFont(font)
+        self.publisher_txt = wx.TextCtrl(self, value=publisher)
+        main_sizer.Add(self.row_builder([publisher_lbl, self.publisher_txt]),
                       0, wx.EXPAND)
         
-        okBtn = wx.Button(self, label="%s Book" % title)
-        okBtn.Bind(wx.EVT_BUTTON, self.on_record)
-        btnSizer.Add(okBtn, 0, wx.ALL, 5)
-        cancelBtn = wx.Button(self, label="Close")
-        cancelBtn.Bind(wx.EVT_BUTTON, self.on_close)
-        btnSizer.Add(cancelBtn, 0, wx.ALL, 5)
+        ok_btn = wx.Button(self, label="%s Book" % title)
+        ok_btn.Bind(wx.EVT_BUTTON, self.on_record)
+        btn_sizer.Add(ok_btn, 0, wx.ALL, 5)
+        cancel_btn = wx.Button(self, label="Close")
+        cancel_btn.Bind(wx.EVT_BUTTON, self.on_close)
+        btn_sizer.Add(cancel_btn, 0, wx.ALL, 5)
         
-        mainSizer.Add(btnSizer, 0, wx.CENTER)
-        self.SetSizer(mainSizer)
+        main_sizer.Add(btn_sizer, 0, wx.CENTER)
+        self.SetSizer(main_sizer)
         
     def get_data(self):
         """
@@ -81,14 +81,14 @@ class RecordDialog(wx.Dialog):
         Also display an error message if required fields
         are empty
         """
-        authorDict = {}
-        bookDict = {}
+        author_dict = {}
+        book_dict = {}
                         
-        fName = self.authorFirstTxt.GetValue()
-        lName = self.authorLastTxt.GetValue()
-        title = self.titleTxt.GetValue()
-        isbn = self.isbnTxt.GetValue()
-        publisher = self.publisherTxt.GetValue()
+        fName = self.author_first_txt.GetValue()
+        lName = self.author_last_txt.GetValue()
+        title = self.title_txt.GetValue()
+        isbn = self.isbn_txt.GetValue()
+        publisher = self.publisher_txt.GetValue()
         
         if fName == "" or title == "":
             show_message("Author and Title are Required!",
@@ -97,13 +97,13 @@ class RecordDialog(wx.Dialog):
             
         if "-" in isbn:
             isbn = isbn.replace("-", "")
-        authorDict["first_name"] = fName
-        authorDict["last_name"] = lName
-        bookDict["title"] = title
-        bookDict["isbn"] = isbn
-        bookDict["publisher"] = publisher
+        author_dict["first_name"] = fName
+        author_dict["last_name"] = lName
+        book_dict["title"] = title
+        book_dict["isbn"] = isbn
+        book_dict["publisher"] = publisher
         
-        return authorDict, bookDict
+        return author_dict, book_dict
             
     def on_add(self):
         """
@@ -147,7 +147,7 @@ class RecordDialog(wx.Dialog):
             self.on_add()
         else:
             self.on_edit()
-        self.titleTxt.SetFocus()
+        self.title_txt.SetFocus()
         
     def row_builder(self, widgets):
         """
