@@ -17,7 +17,7 @@ class GenericDBClass(object):
 class MainPanel(wx.Panel):
     
     def __init__(self, parent):
-        super(MainPanel, self).__init__(parent)
+        super().__init__(parent)
         
         self.db_data = []
         self.current_directory = os.getcwd()
@@ -105,7 +105,7 @@ class MainPanel(wx.Panel):
 class MainFrame(wx.Frame):
     
     def __init__(self):
-        super(MainFrame, self).__init__(
+        super().__init__(
             parent=None, title="Database Viewer", 
             size=(800,600))
         panel = MainPanel(self)
