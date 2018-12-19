@@ -13,16 +13,16 @@ class RecordDialog(wx.Dialog):
         """Constructor"""
         super().__init__(None, title="%s Record" % title)
         self.addRecord = addRecord
-        self.selectedRow = row
+        self.selected_row = row
         self.session = session
         if row:
-            bTitle = self.selectedRow.title
-            fName = self.selectedRow.first_name
-            lName = self.selectedRow.last_name
-            isbn = self.selectedRow.isbn
-            publisher = self.selectedRow.publisher
+            book_title = self.selected_row.title
+            first_name = self.selected_row.first_name
+            last_name = self.selected_row.last_name
+            isbn = self.selected_row.isbn
+            publisher = self.selected_row.publisher
         else:
-            bTitle = fName = lName = isbn = publisher = ""
+            book_title = first_name = last_name = isbn = publisher = ""
         size = (80, -1)
         font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD) 
         
@@ -39,30 +39,30 @@ class RecordDialog(wx.Dialog):
         font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD) 
         title_lbl = wx.StaticText(self, label="Title:", size=size)
         title_lbl.SetFont(font)
-        self.title_txt = wx.TextCtrl(self, value=bTitle)
+        self.title_txt = wx.TextCtrl(self, value=book_title)
         main_sizer.Add(self.row_builder([title_lbl, self.title_txt]), 
-                      0, wx.EXPAND)
+                       0, wx.ALL)
         
         author_lbl = wx.StaticText(self, label="Author:", size=size)
         author_lbl.SetFont(font)
         author_sizer.Add(author_lbl, 0, wx.ALL, 5)
-        self.author_first_txt = wx.TextCtrl(self, value=fName)
-        author_sizer.Add(self.author_first_txt, 1, wx.EXPAND|wx.ALL, 5)
-        self.author_last_txt = wx.TextCtrl(self, value=lName)
-        author_sizer.Add(self.author_last_txt, 1, wx.EXPAND|wx.ALL, 5)
-        main_sizer.Add(author_sizer, 0, wx.EXPAND)
+        self.author_first_txt = wx.TextCtrl(self, value=first_name)
+        author_sizer.Add(self.author_first_txt, 1, wx.ALL, 5)
+        self.author_last_txt = wx.TextCtrl(self, value=last_name)
+        author_sizer.Add(self.author_last_txt, 1, wx.ALL, 5)
+        main_sizer.Add(author_sizer, 0, wx.ALL)
         
         isbn_lbl = wx.StaticText(self, label="ISBN:", size=size)
         isbn_lbl.SetFont(font)
         self.isbn_txt = wx.TextCtrl(self, value=isbn)
         main_sizer.Add(self.row_builder([isbn_lbl, self.isbn_txt]),
-                      0, wx.EXPAND)
+                      0, wx.ALL)
         
         publisher_lbl = wx.StaticText(self, label="Publisher:", size=size)
         publisher_lbl.SetFont(font)
         self.publisher_txt = wx.TextCtrl(self, value=publisher)
         main_sizer.Add(self.row_builder([publisher_lbl, self.publisher_txt]),
-                      0, wx.EXPAND)
+                      0, wx.ALL)
         
         ok_btn = wx.Button(self, label="%s Book" % title)
         ok_btn.Bind(wx.EVT_BUTTON, self.on_record)
@@ -134,7 +134,7 @@ class RecordDialog(wx.Dialog):
         """
         authorDict, bookDict = self.get_data()
         comboDict = {**authorDict, **bookDict}
-        controller.edit_record(self.session, self.selectedRow.id, comboDict)
+        controller.edit_record(self.session, self.selected_row.id, comboDict)
         show_message("Book Edited Successfully!", "Success",
                        wx.ICON_INFORMATION)
         self.Destroy()
@@ -172,6 +172,6 @@ def show_message(message, caption, flag=wx.ICON_ERROR):
 
 if __name__ == "__main__":
     app = wx.App(False)
-    dlg = RecordDialog()
+    dlg = RecordDialog(session=None)
     dlg.ShowModal()
     app.MainLoop()
