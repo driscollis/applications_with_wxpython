@@ -92,8 +92,8 @@ class RecordDialog(wx.Dialog):
         
         if fName == "" or title == "":
             show_message("Author and Title are Required!",
-                           "Error")
-            return
+                         "Error")
+            return None, None
             
         if "-" in isbn:
             isbn = isbn.replace("-", "")
@@ -110,6 +110,9 @@ class RecordDialog(wx.Dialog):
         Add the record to the database
         """
         authorDict, bookDict = self.get_data()
+        if authorDict is None or bookDict is None:
+            return
+        
         data = ({"author":authorDict, "book":bookDict})
         controller.add_record(self.session, data)
         
@@ -156,7 +159,7 @@ class RecordDialog(wx.Dialog):
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         lbl, txt = widgets
         sizer.Add(lbl, 0, wx.ALL, 5)
-        sizer.Add(txt, 1, wx.EXPAND|wx.ALL, 5)
+        sizer.Add(txt, 1, wx.ALL, 5)
         return sizer
 
 
