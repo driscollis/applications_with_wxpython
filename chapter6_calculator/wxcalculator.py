@@ -76,8 +76,9 @@ class CalcFrame(wx.Frame):
     def __init__(self):
         super().__init__(
             None, title="wxCalculator",
-            size=(400, 400))
+            size=(300, 375))
         panel = CalcPanel(self)
+        self.SetSizeHints(300, 375, 300, 375)
         self.Show()
 
 
