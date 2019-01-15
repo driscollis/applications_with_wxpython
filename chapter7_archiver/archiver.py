@@ -69,25 +69,32 @@ class ArchivePanel(wx.Panel):
         self.SetSizer(main_sizer)
         
     def on_create_archive(self, event):
+        if not self.archive_olv.GetObjects():
+            self.show_message('No files / folders to archive',
+                              'Error', wx.ICON_ERROR)
+            return
+        
         dlg = wx.DirDialog(self, "Choose a directory:",
-                           style=wx.DD_DEFAULT_STYLE)
+                           style=wx.DD_DEFAULT_STYLE,
+                           defaultPath=self.current_directory)
+        archive_filename = self.archive_filename.GetValue()
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
-            if self.archive_types.GetValue() == 'Tar':
-                full_save_path = os.path.join(
-                    path, '{filename}.tar'.format(
-                        filename=self.archive_filename))
-                controller.create_tarball(
-                    full_save_path, 
-                    self.archive_olv.GetObjects())
-                
-            elif self.archive_types.GetValue() == 'Zip':
-                full_save_path = os.path.join(
-                    path, '{filename}.zip'.format(
-                        filename=self.archive_filename))
-            else:
-                # TODO add message dialog here
-                pass
+            self.current_directory = path
+            archive_type = self.archive_types.GetValue()
+            
+            full_save_path = os.path.join(
+                path, '{filename}.{type}'.format(
+                    filename=archive_filename,
+                    type=archive_type.lower()
+                ))
+            controller.create_archive(
+                full_save_path, 
+                self.archive_olv.GetObjects(),
+                archive_type)
+            message = f'Archive created at {full_save_path}'
+            self.show_message(message, 'Archive Created',
+                              wx.ICON_INFORMATION)
         dlg.Destroy()
         
     def update_archive(self):
@@ -126,6 +133,15 @@ class ArchivePanel(wx.Panel):
         
         suffix = suffixes[index]
         return f'{size:.1f} {suffix}'
+    
+    def show_message(self, message, caption, flag=wx.ICON_ERROR):
+        """
+        Show a message dialog
+        """
+        msg = wx.MessageDialog(None, message=message,
+                               caption=caption, style=flag)
+        msg.ShowModal()
+        msg.Destroy()    
         
 
 class MainFrame(wx.Frame):
