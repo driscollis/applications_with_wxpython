@@ -1,6 +1,12 @@
 # Creating GUI Applications with wxPython
 
-This is the code repository for the book, Creating GUI Applications with wxPython by Michael Driscoll
+<a href="https://leanpub.com/creatingapplicationswithwxpython/"><img src="https://www.blog.pythonlibrary.org/wp-content/uploads/2019/01/creating_wxpython_apps_thumb.jpg" alt="Jupyter Notebook 101" align="right"></a>
+
+This is the code repository for the book, **Creating GUI Applications with wxPython** by Michael Driscoll
+
+## What is this book about?
+
+**Creating GUI Applications with wxPython** will teach the reader how to create several different cross-platform GUI applications. By the end of the book, you will have also learned how to distribute your applications to users that don't have Python or wxPython installed using PyInstaller or Py2Exe.
 
 ## Audience
 This book is for intermediate level developers who would like to learn how to create cross-platform graphical user interfaces with the Python programming language. It would be helpful if you knew the basics of the **wxPython** package, but that is not a requirement.
