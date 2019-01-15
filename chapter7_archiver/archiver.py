@@ -1,8 +1,14 @@
+import controller
+
+import os
 import pathlib
 import time
 import wx
 
 from ObjectListView import ObjectListView, ColumnDefn
+
+wildcard = "Tar (*.tar)|*.tar|" \
+           "Zip (*.zip)|*.zip"
 
 class Items:
 
@@ -32,17 +38,65 @@ class ArchivePanel(wx.Panel):
         super().__init__(parent)
         drop_target = DropTarget(self)
         self.archive_items = []
-
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        paths = wx.StandardPaths.Get()
+        self.current_directory = paths.GetDocumentsDir()
+        
         self.archive_olv = ObjectListView(
             self, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
         self.archive_olv.SetEmptyListMsg("Add Files / Folders here")
         self.archive_olv.SetDropTarget(drop_target)
         self.update_archive()
-
-        main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.archive_olv, 1, wx.ALL|wx.EXPAND, 5)
+        
+        
+        h_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        label = wx.StaticText(self, label='File name:')
+        h_sizer.Add(label)
+        self.archive_filename = wx.TextCtrl(self)
+        h_sizer.Add(self.archive_filename, 1, wx.EXPAND)
+        self.archive_types = wx.ComboBox(
+            self, value='Tar', 
+            choices=['Tar', 'Zip'],
+            size=(75, -1))
+        h_sizer.Add(self.archive_types, 0)
+        main_sizer.Add(h_sizer, 0, wx.EXPAND)
+        
+        create_archive_btn = wx.Button(self, label='Create Archive')
+        create_archive_btn.Bind(wx.EVT_BUTTON, self.on_create_archive)
+        main_sizer.Add(create_archive_btn, 0, wx.ALL|wx.CENTER, 5)
+        
         self.SetSizer(main_sizer)
-
+        
+    def on_create_archive(self, event):
+        if not self.archive_olv.GetObjects():
+            self.show_message('No files / folders to archive',
+                              'Error', wx.ICON_ERROR)
+            return
+        
+        dlg = wx.DirDialog(self, "Choose a directory:",
+                           style=wx.DD_DEFAULT_STYLE,
+                           defaultPath=self.current_directory)
+        archive_filename = self.archive_filename.GetValue()
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            self.current_directory = path
+            archive_type = self.archive_types.GetValue()
+            
+            full_save_path = os.path.join(
+                path, '{filename}.{type}'.format(
+                    filename=archive_filename,
+                    type=archive_type.lower()
+                ))
+            controller.create_archive(
+                full_save_path, 
+                self.archive_olv.GetObjects(),
+                archive_type)
+            message = f'Archive created at {full_save_path}'
+            self.show_message(message, 'Archive Created',
+                              wx.ICON_INFORMATION)
+        dlg.Destroy()
+        
     def update_archive(self):
         self.archive_olv.SetColumns([
                             ColumnDefn("Name", "left", 350, "name"),
@@ -79,6 +133,16 @@ class ArchivePanel(wx.Panel):
 
         suffix = suffixes[index]
         return f'{size:.1f} {suffix}'
+    
+    def show_message(self, message, caption, flag=wx.ICON_ERROR):
+        """
+        Show a message dialog
+        """
+        msg = wx.MessageDialog(None, message=message,
+                               caption=caption, style=flag)
+        msg.ShowModal()
+        msg.Destroy()    
+        
 
 
 class MainFrame(wx.Frame):
