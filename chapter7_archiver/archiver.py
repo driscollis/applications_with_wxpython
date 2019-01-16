@@ -83,7 +83,7 @@ class ArchivePanel(wx.Panel):
             self.current_directory = path
             archive_type = self.archive_types.GetValue()
 
-            full_save_path = os.path.join(
+            full_save_path = pathlib.Path(
                 path, '{filename}.{type}'.format(
                     filename=archive_filename,
                     type=archive_type.lower()
