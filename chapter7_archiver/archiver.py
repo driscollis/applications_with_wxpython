@@ -57,7 +57,7 @@ class ArchivePanel(wx.Panel):
         h_sizer.Add(self.archive_filename, 1, wx.EXPAND)
         self.archive_types = wx.ComboBox(
             self, value='Tar',
-            choices=['Tar', 'Zip'],
+            choices=['Tar'],
             size=(75, -1))
         h_sizer.Add(self.archive_types, 0)
         main_sizer.Add(h_sizer, 0, wx.EXPAND)
