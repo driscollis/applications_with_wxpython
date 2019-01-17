@@ -10,6 +10,8 @@ from ObjectListView import ObjectListView, ColumnDefn
 wildcard = "Tar (*.tar)|*.tar|" \
            "Zip (*.zip)|*.zip"
 
+open_wildcard = "All files (*.*)|*.*"
+
 class Items:
 
     def __init__(self, path, name, size, item_type,
@@ -152,7 +154,7 @@ class MainFrame(wx.Frame):
         super().__init__(
             None, title="PyArchiver",
             size=(800, 600))
-        panel = ArchivePanel(self)
+        self.panel = ArchivePanel(self)
         self.create_menu()
 
         self.Show()
@@ -172,9 +174,11 @@ class MainFrame(wx.Frame):
         # Create edit menu
         edit_menu = wx.Menu()
 
-        add_menu_item = edit_menu.Append(
-            wx.NewId(), 'Add File/Folder',
-            'Add a file or folder')
+        add_file_menu_item = edit_menu.Append(
+            wx.NewId(), 'Add File',
+            'Add a file to be archived')
+        self.Bind(wx.EVT_MENU, self.on_add_file, add_file_menu_item)
+
         remove_menu_item = edit_menu.Append(
             wx.NewId(), 'Remove File/Folder',
             'Remove a file or folder')
@@ -182,8 +186,17 @@ class MainFrame(wx.Frame):
 
         self.SetMenuBar(menu_bar)
 
-    def on_add(self, event):
-        pass
+    def on_add_file(self, event):
+        dlg = wx.FileDialog(
+        self, message="Choose a file",
+            defaultDir=self.panel.current_directory,
+            defaultFile="",
+            wildcard=open_wildcard,
+            style=wx.FD_OPEN | wx.FD_MULTIPLE | wx.FD_CHANGE_DIR
+        )
+        if dlg.ShowModal() == wx.ID_OK:
+            paths = dlg.GetPaths()
+        dlg.Destroy()
 
     def on_exit(self, event):
         self.Close()
