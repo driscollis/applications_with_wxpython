@@ -9,8 +9,10 @@ class CalcPanel(wx.Panel):
         
     def create_ui(self):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
+        font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL)
         
         self.solution = wx.TextCtrl(self, style=wx.TE_RIGHT)
+        self.solution.SetFont(font)
         self.solution.Disable()
         main_sizer.Add(self.solution, 0, wx.EXPAND|wx.ALL, 5)
         self.running_total = wx.StaticText(self)
@@ -25,9 +27,9 @@ class CalcPanel(wx.Panel):
             btn_sizer = wx.BoxSizer()
             for label in label_list:
                 button = wx.Button(self, label=label, size=size)
-                btn_sizer.Add(button, 0, wx.ALL|wx.ALIGN_CENTER, 3)
+                btn_sizer.Add(button, 1, wx.ALIGN_CENTER|wx.EXPAND, 0)
                 button.Bind(wx.EVT_BUTTON, self.update_equation)
-            main_sizer.Add(btn_sizer, 0, wx.ALIGN_CENTER)
+            main_sizer.Add(btn_sizer, 1, wx.ALIGN_CENTER|wx.EXPAND)
         
         equals_btn = wx.Button(self, label='=')
         equals_btn.Bind(wx.EVT_BUTTON, self.on_total)
@@ -44,7 +46,10 @@ class CalcPanel(wx.Panel):
         label = btn.GetLabel()
         current_equation = self.solution.GetValue()
         
-        self.solution.SetValue(current_equation + ' ' + label)
+        if label not in ['/', '*', '-', '+']:
+            self.solution.SetValue(current_equation + label)
+        else:
+            self.solution.SetValue(current_equation + ' ' + label)
         
         for item in ['/', '*', '-', '+']:
             if item in self.solution.GetValue():
@@ -64,6 +69,7 @@ class CalcPanel(wx.Panel):
         
     def on_clear(self, event):
         self.solution.Clear()
+        self.running_total.SetLabel('')
     
     def on_total(self, event):
         solution = self.update_solution()
