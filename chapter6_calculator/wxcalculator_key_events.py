@@ -24,11 +24,11 @@ class CalcPanel(wx.Panel):
                    ['4', '5', '6', '*'],
                    ['1', '2', '3', '-'],
                    ['', '0', '', '+']]
-        size = (50, 50)
+
         for label_list in buttons:
             btn_sizer = wx.BoxSizer()
             for label in label_list:
-                button = wx.Button(self, label=label, size=size)
+                button = wx.Button(self, label=label)
                 btn_sizer.Add(button, 1, wx.ALIGN_CENTER|wx.EXPAND, 0)
                 button.Bind(wx.EVT_BUTTON, self.on_calculate)
             main_sizer.Add(btn_sizer, 1, wx.ALIGN_CENTER|wx.EXPAND)
@@ -106,9 +106,9 @@ class CalcFrame(wx.Frame):
     def __init__(self):
         super().__init__(
             None, title="wxCalculator",
-            size=(300, 375))
+            size=(350, 375))
         panel = CalcPanel(self)
-        self.SetSizeHints(300, 375, 300, 375)
+        self.SetSizeHints(350, 375, 300, 375)
         self.Show()
 
 
