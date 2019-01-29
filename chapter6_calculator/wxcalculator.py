@@ -5,6 +5,7 @@ class CalcPanel(wx.Panel):
     
     def __init__(self, parent):
         super().__init__(parent)
+        self.last_button_pressed = None
         self.create_ui()
         
     def create_ui(self):
@@ -41,16 +42,23 @@ class CalcPanel(wx.Panel):
         self.SetSizer(main_sizer)
         
     def update_equation(self, event):
+        operators = ['/', '*', '-', '+']
         btn = event.GetEventObject()
         label = btn.GetLabel()
         current_equation = self.solution.GetValue()
         
-        if label not in ['/', '*', '-', '+']:
-            self.solution.SetValue(current_equation + label)
-        else:
+        if label not in operators:
+            if self.last_button_pressed in operators:
+                self.solution.SetValue(current_equation + ' ' + label)
+            else:
+                self.solution.SetValue(current_equation + label)
+        elif label in operators and current_equation is not '' \
+             and self.last_button_pressed not in operators:
             self.solution.SetValue(current_equation + ' ' + label)
         
-        for item in ['/', '*', '-', '+']:
+        self.last_button_pressed = label
+        
+        for item in operators:
             if item in self.solution.GetValue():
                 self.update_solution()
                 break

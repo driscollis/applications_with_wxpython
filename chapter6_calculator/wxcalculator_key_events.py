@@ -5,6 +5,7 @@ class CalcPanel(wx.Panel):
     
     def __init__(self, parent):
         super().__init__(parent)
+        self.last_button_pressed = None
         self.whitelist = ['0', '1', '2', '3', '4',
                           '5', '6', '7', '8', '9']
         self.create_ui()
@@ -77,14 +78,21 @@ class CalcPanel(wx.Panel):
             self.running_total.SetLabel('')
     
     def update_equation(self, text):
+        operators = ['/', '*', '-', '+']
         current_equation = self.solution.GetValue()
         
-        if text not in ['/', '*', '-', '+']:
-            self.solution.SetValue(current_equation + text)
-        else:
+        if text not in operators:
+            if self.last_button_pressed in operators:
+                self.solution.SetValue(current_equation + ' ' + text)
+            else:
+                self.solution.SetValue(current_equation + text)
+        elif text in operators and current_equation is not '' \
+             and self.last_button_pressed not in operators:
             self.solution.SetValue(current_equation + ' ' + text)
         
-        for item in ['/', '*', '-', '+']:
+        self.last_button_pressed = text
+        
+        for item in operators:
             if item in self.solution.GetValue():
                 self.update_solution()
                 break
@@ -108,7 +116,7 @@ class CalcFrame(wx.Frame):
             None, title="wxCalculator",
             size=(350, 375))
         panel = CalcPanel(self)
-        self.SetSizeHints(350, 375, 300, 375)
+        self.SetSizeHints(350, 375, 350, 375)
         self.Show()
 
 
