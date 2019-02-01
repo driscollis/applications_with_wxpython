@@ -78,7 +78,7 @@ class MainFrame(wx.Frame):
 
     def __init__(self):
         super().__init__(None, title='Image Viewer',
-                                        size=(400, 400))
+                         size=(400, 400))
         self.panel = ImagePanel(self)
         self.create_toolbar()
         self.Show()
