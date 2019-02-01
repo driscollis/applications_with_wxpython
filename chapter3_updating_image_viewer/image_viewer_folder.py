@@ -6,12 +6,12 @@ import wx
 
 class ImagePanel(wx.Panel):
 
-    def __init__(self, parent):
+    def __init__(self, parent, image_size):
         super().__init__(parent)
         self.max_size = 240
         self.photos = []
 
-        img = wx.Image(240,240)
+        img = wx.Image(*image_size)
         self.image_ctrl = wx.StaticBitmap(
             self, bitmap=wx.Bitmap(img))
     
@@ -39,7 +39,7 @@ class MainFrame(wx.Frame):
 
     def __init__(self):
         super().__init__(None, title='Image Viewer')
-        self.panel = ImagePanel(self)
+        self.panel = ImagePanel(self, image_size=(240,240))
         self.create_toolbar()
         self.Show()
         
