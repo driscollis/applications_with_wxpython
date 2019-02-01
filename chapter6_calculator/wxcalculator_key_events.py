@@ -1,3 +1,5 @@
+# wxcalculator_key_events.py
+
 import wx
 
 
@@ -7,7 +9,10 @@ class CalcPanel(wx.Panel):
         super().__init__(parent)
         self.last_button_pressed = None
         self.whitelist = ['0', '1', '2', '3', '4',
-                          '5', '6', '7', '8', '9']
+                          '5', '6', '7', '8', '9',
+                          '-', '+', '/', '*', '.']
+        self.on_key_called = False
+        self.empty = True
         self.create_ui()
         
     def create_ui(self):
@@ -16,7 +21,7 @@ class CalcPanel(wx.Panel):
         
         self.solution = wx.TextCtrl(self, style=wx.TE_RIGHT)
         self.solution.SetFont(font)
-        self.solution.Bind(wx.EVT_KEY_DOWN, self.on_key)
+        self.solution.Bind(wx.EVT_TEXT, self.on_key)
         main_sizer.Add(self.solution, 0, wx.EXPAND|wx.ALL, 5)
         self.running_total = wx.StaticText(self)
         main_sizer.Add(self.running_total, 0, wx.ALIGN_RIGHT)
@@ -24,7 +29,7 @@ class CalcPanel(wx.Panel):
         buttons = [['7', '8', '9', '/'],
                    ['4', '5', '6', '*'],
                    ['1', '2', '3', '-'],
-                   ['', '0', '', '+']]
+                   ['.', '0', '', '+']]
 
         for label_list in buttons:
             btn_sizer = wx.BoxSizer()
@@ -47,29 +52,25 @@ class CalcPanel(wx.Panel):
     def on_calculate(self, event):
         btn = event.GetEventObject()
         label = btn.GetLabel()
+        self.on_key_called = True
         self.update_equation(label)
         
     def on_clear(self, event):
         self.solution.Clear()
         self.running_total.SetLabel('')
+        self.empty = True
+        self.solution.SetFocus()
         
     def on_key(self, event):
-        keycode = event.GetKeyCode()
-        unicode_key = event.GetUnicodeKey()
-        if keycode in [wx.WXK_NUMPAD_ADD, wx.WXK_ADD]:
-            self.update_equation('+')
-        elif keycode in [wx.WXK_NUMPAD_SUBTRACT, wx.WXK_SUBTRACT]:
-            self.update_equation('-')
-        elif keycode in [wx.WXK_NUMPAD_MULTIPLY, wx.WXK_MULTIPLY]:
-            self.update_equation('*')
-        elif keycode in [wx.WXK_NUMPAD_DIVIDE, wx.WXK_DIVIDE]:
-            self.update_equation('/')
-
-        else:        
-            decoded_key = chr(unicode_key)
-            if decoded_key in self.whitelist:
-                self.update_equation(decoded_key)
-
+        if self.on_key_called:
+            self.on_key_called = False
+            return
+        
+        key = event.GetString()
+        self.on_key_called = True
+        
+        if key in self.whitelist:
+            self.update_equation(key)
     
     def on_total(self, event):
         solution = self.update_solution()
@@ -84,6 +85,9 @@ class CalcPanel(wx.Panel):
         if text not in operators:
             if self.last_button_pressed in operators:
                 self.solution.SetValue(current_equation + ' ' + text)
+            elif self.empty and current_equation:
+                # The solution is not empty
+                self.empty = False
             else:
                 self.solution.SetValue(current_equation + text)
         elif text in operators and current_equation is not '' \
@@ -91,6 +95,7 @@ class CalcPanel(wx.Panel):
             self.solution.SetValue(current_equation + ' ' + text)
         
         self.last_button_pressed = text
+        self.solution.SetInsertionPoint(-1)
         
         for item in operators:
             if item in self.solution.GetValue():
