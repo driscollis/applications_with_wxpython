@@ -4,10 +4,10 @@ import wx
 
 class ImagePanel(wx.Panel):
     
-    def __init__(self, parent):
+    def __init__(self, parent, image_size):
         super().__init__(parent)
         
-        img = wx.Image(240,240)
+        img = wx.Image(*image_size)
         self.image_ctrl = wx.StaticBitmap(self, 
                                          bitmap=wx.Bitmap(img))
         browse_btn = wx.Button(self, label='Browse')
@@ -24,7 +24,7 @@ class MainFrame(wx.Frame):
     
     def __init__(self):
         super().__init__(None, title='Image Viewer')
-        panel = ImagePanel(self)
+        panel = ImagePanel(self, image_size=(240,240))
         self.Show()
 
 
