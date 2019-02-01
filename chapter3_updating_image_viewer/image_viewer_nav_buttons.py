@@ -16,13 +16,12 @@ class ImagePanel(wx.Panel):
         """
         Layout the widgets on the panel
         """
-    
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
         btn_sizer = wx.BoxSizer(wx.HORIZONTAL)
     
         img = wx.Image(self.max_size, self.max_size)
         self.image_ctrl = wx.StaticBitmap(self, wx.ID_ANY, 
-                                             wx.Bitmap(img))
+                                          wx.Bitmap(img))
         self.main_sizer.Add(self.image_ctrl, 0, wx.ALL|wx.CENTER, 5)
         self.image_label = wx.StaticText(self, label="")
         self.main_sizer.Add(self.image_label, 0, wx.ALL|wx.CENTER, 5)
