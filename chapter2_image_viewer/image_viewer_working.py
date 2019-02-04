@@ -35,13 +35,12 @@ class ImagePanel(wx.Panel):
         @param event: The event object
         """
         wildcard = "JPEG files (*.jpg)|*.jpg"
-        dialog = wx.FileDialog(None, "Choose a file",
-                               wildcard=wildcard,
-                               style=wx.ID_OPEN)
-        if dialog.ShowModal() == wx.ID_OK:
-            self.photo_txt.SetValue(dialog.GetPath())
-            self.load_image()
-        dialog.Destroy()
+        with wx.FileDialog(None, "Choose a file",
+                           wildcard=wildcard,
+                           style=wx.ID_OPEN) as dialog:
+            if dialog.ShowModal() == wx.ID_OK:
+                self.photo_txt.SetValue(dialog.GetPath())
+                self.load_image()
         
     def load_image(self):
         """

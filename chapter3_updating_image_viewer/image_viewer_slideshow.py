@@ -137,19 +137,17 @@ class MainFrame(wx.Frame):
         """
         Open a directory dialog
         """
-        dlg = wx.DirDialog(self, "Choose a directory",
-                                   style=wx.DD_DEFAULT_STYLE)
+        with wx.DirDialog(self, "Choose a directory",
+                          style=wx.DD_DEFAULT_STYLE) as dlg:
          
-        if dlg.ShowModal() == wx.ID_OK:
-            self.folderPath = dlg.GetPath()
-            
-            photos = glob.glob(os.path.join(self.folderPath, '*.jpg'))
-            self.panel.photos = photos
-            if photos:
-                self.panel.update_photo(photos[0])
-                self.panel.total_photos = len(photos)
-            
-        dlg.Destroy()
+            if dlg.ShowModal() == wx.ID_OK:
+                self.folderPath = dlg.GetPath()
+                
+                photos = glob.glob(os.path.join(self.folderPath, '*.jpg'))
+                self.panel.photos = photos
+                if photos:
+                    self.panel.update_photo(photos[0])
+                    self.panel.total_photos = len(photos)
 
 
 if __name__ == '__main__':

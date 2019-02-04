@@ -69,19 +69,17 @@ class MainPanel(wx.Panel):
         Populates the table combobox
         """
         wildcard = "All files (*.*)|*.*"
-        dlg = wx.FileDialog(
-                self, message="Choose a file",
-                defaultDir=self.current_directory,
-                defaultFile="",
-                wildcard=wildcard,
-                style=wx.FD_OPEN | wx.FD_CHANGE_DIR
-            )
-        if dlg.ShowModal() == wx.ID_OK:
-            db_path = dlg.GetPath()
-            dlg.Destroy()
-        else:
-            dlg.Destroy()
-            return
+        with wx.FileDialog(
+            self, message="Choose a file",
+            defaultDir=self.current_directory,
+            defaultFile="",
+            wildcard=wildcard,
+            style=wx.FD_OPEN | wx.FD_CHANGE_DIR
+        ) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                db_path = dlg.GetPath()
+            else:
+                return
     
         self.engine = create_engine('sqlite:///%s' % db_path, echo=True)
     

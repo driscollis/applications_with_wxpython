@@ -75,9 +75,9 @@ class BookPanel(wx.Panel):
         """
         Add a record to the database
         """
-        dlg = dialogs.RecordDialog(self.session)
-        dlg.ShowModal()
-        dlg.Destroy()
+        with dialogs.RecordDialog(self.session) as dlg:
+            dlg.ShowModal()
+            
         self.show_all_records()
     
     def edit_record(self, event):
@@ -88,12 +88,13 @@ class BookPanel(wx.Panel):
         if selected_row is None:
             dialogs.show_message('No row selected!', 'Error')
             return
-        dlg = dialogs.RecordDialog(self.session,
-                                   selected_row, 
-                                   title='Modify',
-                                   addRecord=False)
-        dlg.ShowModal()
-        dlg.Destroy()
+        
+        with dialogs.RecordDialog(self.session,
+                                  selected_row, 
+                                  title='Modify',
+                                  addRecord=False) as dlg:
+            dlg.ShowModal()
+        
         self.show_all_records()
     
     def delete_record(self, event):
