@@ -1,8 +1,6 @@
 import os
 import tarfile
-import zipfile
 
-from functools import partial
 from pathlib import Path
 
 def create_archive(path, archive_objects, archive_type):
