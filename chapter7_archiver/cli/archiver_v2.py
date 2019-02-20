@@ -40,11 +40,11 @@ def main():
     args = get_args()
     if args.output:
         output = pathlib.Path(args.output)
-        input_paths = get_paths(args.input_path)
+        input_path = get_paths(args.input_path)
     else:
         output = pathlib.Path(f'{temp}.tar')
-        input_paths = get_paths(args.input_path)
-    controller.create_tar(output, archive_objects=input_paths)
+        input_path = get_paths(args.input_path)
+    controller.create_tar(output, archive_objects=input_path)
     print(f'Created tarball from {input_path} to {output}')
     
 if __name__ == '__main__':

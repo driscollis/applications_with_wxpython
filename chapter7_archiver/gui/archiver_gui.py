@@ -40,28 +40,23 @@ class ArchivePanel(wx.Panel):
 
     def __init__(self, parent):
         super().__init__(parent)
-        font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL)
         drop_target = DropTarget(self)
         self.archive_items = []
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
         paths = wx.StandardPaths.Get()
         self.current_directory = paths.GetDocumentsDir()
-        
-        # Create sizers
-        main_sizer = wx.BoxSizer(wx.VERTICAL)
-        h_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        
-        # Create iinput widget
+
         self.archive_olv = ObjectListView(
             self, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
         self.archive_olv.SetEmptyListMsg("Add Files / Folders here")
         self.archive_olv.SetDropTarget(drop_target)
         self.update_archive()
         main_sizer.Add(self.archive_olv, 1, wx.ALL|wx.EXPAND, 5)
-        
-        # Create output related widgets 
+
+
+        h_sizer = wx.BoxSizer(wx.HORIZONTAL)
         label = wx.StaticText(self, label='File name:')
-        label.SetFont(font)
-        h_sizer.Add(label, 0, wx.CENTER)
+        h_sizer.Add(label)
         self.archive_filename = wx.TextCtrl(self)
         h_sizer.Add(self.archive_filename, 1, wx.EXPAND)
         self.archive_types = wx.ComboBox(
@@ -69,9 +64,8 @@ class ArchivePanel(wx.Panel):
             choices=['Tar'],
             size=(75, -1))
         h_sizer.Add(self.archive_types, 0)
-        main_sizer.Add(h_sizer, 0, wx.EXPAND|wx.ALL, 5)
-        
-        # Create archive button
+        main_sizer.Add(h_sizer, 0, wx.EXPAND)
+
         create_archive_btn = wx.Button(self, label='Create Archive')
         create_archive_btn.Bind(wx.EVT_BUTTON, self.on_create_archive)
         main_sizer.Add(create_archive_btn, 0, wx.ALL|wx.CENTER, 5)
@@ -152,6 +146,7 @@ class ArchivePanel(wx.Panel):
                                caption=caption, style=flag)
         msg.ShowModal()
         msg.Destroy()
+
 
 
 class MainFrame(wx.Frame):
