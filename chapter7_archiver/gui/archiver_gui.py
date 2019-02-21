@@ -173,7 +173,7 @@ class MainFrame(wx.Frame):
         file_menu = wx.Menu()
 
         exit_menu_item = file_menu.Append(
-            wx.NewId(), "Exit",
+            wx.ID_ANY, "Exit",
             "Exit the application")
         menu_bar.Append(file_menu, '&File')
         self.Bind(wx.EVT_MENU, self.on_exit, exit_menu_item)
@@ -182,12 +182,12 @@ class MainFrame(wx.Frame):
         edit_menu = wx.Menu()
 
         add_file_menu_item = edit_menu.Append(
-            wx.NewId(), 'Add File',
+            wx.ID_ANY, 'Add File',
             'Add a file to be archived')
         self.Bind(wx.EVT_MENU, self.on_add_file, add_file_menu_item)
 
         remove_menu_item = edit_menu.Append(
-            wx.NewId(), 'Remove File/Folder',
+            wx.ID_ANY, 'Remove File/Folder',
             'Remove a file or folder')
         menu_bar.Append(edit_menu, 'Edit')
 
