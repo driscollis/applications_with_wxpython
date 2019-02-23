@@ -9,8 +9,7 @@ import wx
 
 from ObjectListView import ObjectListView, ColumnDefn
 
-wildcard = "Tar (*.tar)|*.tar|" \
-           "Zip (*.zip)|*.zip"
+wildcard = "Tar (*.tar)|*.tar|"
 
 open_wildcard = "All files (*.*)|*.*"
 
@@ -45,11 +44,11 @@ class ArchivePanel(wx.Panel):
         self.archive_items = []
         paths = wx.StandardPaths.Get()
         self.current_directory = paths.GetDocumentsDir()
-        
+
         # Create sizers
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         h_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        
+
         # Create iinput widget
         self.archive_olv = ObjectListView(
             self, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
@@ -57,8 +56,8 @@ class ArchivePanel(wx.Panel):
         self.archive_olv.SetDropTarget(drop_target)
         self.update_archive()
         main_sizer.Add(self.archive_olv, 1, wx.ALL|wx.EXPAND, 5)
-        
-        # Create output related widgets 
+
+        # Create output related widgets
         label = wx.StaticText(self, label='File name:')
         label.SetFont(font)
         h_sizer.Add(label, 0, wx.CENTER)
@@ -70,7 +69,7 @@ class ArchivePanel(wx.Panel):
             size=(75, -1))
         h_sizer.Add(self.archive_types, 0)
         main_sizer.Add(h_sizer, 0, wx.EXPAND|wx.ALL, 5)
-        
+
         # Create archive button
         create_archive_btn = wx.Button(self, label='Create Archive')
         create_archive_btn.Bind(wx.EVT_BUTTON, self.on_create_archive)
@@ -162,54 +161,9 @@ class MainFrame(wx.Frame):
             None, title="PyArchiver",
             size=(800, 600))
         self.panel = ArchivePanel(self)
-        self.create_menu()
 
         self.Show()
 
-    def create_menu(self):
-        menu_bar = wx.MenuBar()
-
-        # Create file menu
-        file_menu = wx.Menu()
-
-        exit_menu_item = file_menu.Append(
-            wx.ID_ANY, "Exit",
-            "Exit the application")
-        menu_bar.Append(file_menu, '&File')
-        self.Bind(wx.EVT_MENU, self.on_exit, exit_menu_item)
-
-        # Create edit menu
-        edit_menu = wx.Menu()
-
-        add_file_menu_item = edit_menu.Append(
-            wx.ID_ANY, 'Add File',
-            'Add a file to be archived')
-        self.Bind(wx.EVT_MENU, self.on_add_file, add_file_menu_item)
-
-        remove_menu_item = edit_menu.Append(
-            wx.ID_ANY, 'Remove File/Folder',
-            'Remove a file or folder')
-        menu_bar.Append(edit_menu, 'Edit')
-
-        self.SetMenuBar(menu_bar)
-
-    def on_add_file(self, event):
-        dlg = wx.FileDialog(
-        self, message="Choose a file",
-            defaultDir=self.panel.current_directory,
-            defaultFile="",
-            wildcard=open_wildcard,
-            style=wx.FD_OPEN | wx.FD_MULTIPLE | wx.FD_CHANGE_DIR
-        )
-        if dlg.ShowModal() == wx.ID_OK:
-            paths = dlg.GetPaths()
-        dlg.Destroy()
-
-    def on_exit(self, event):
-        self.Close()
-
-    def on_remove(self, event):
-        pass
 
 if __name__ == "__main__":
     app = wx.App(False)
