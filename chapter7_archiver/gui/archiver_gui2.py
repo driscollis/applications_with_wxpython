@@ -194,6 +194,7 @@ class MainFrame(wx.Frame):
         remove_menu_item = edit_menu.Append(
             wx.ID_ANY, 'Remove File/Folder',
             'Remove a file or folder')
+        self.Bind(wx.EVT_MENU, self.on_remove, remove_menu_item)
         menu_bar.Append(edit_menu, 'Edit')
 
         self.SetMenuBar(menu_bar)
@@ -212,12 +213,12 @@ class MainFrame(wx.Frame):
         dlg.Destroy()
 
     def on_add_folder(self, event):
-        dlg = MDD.MultiDirDialog(
-            self, title="Choose a directory:",
+        dlg = wx.DirDialog(
+            self, message="Choose a directory:",
             defaultPath=self.panel.current_directory,
-            agwStyle=MDD.DD_MULTIPLE | MDD.DD_DIR_MUST_EXIST)
+            style=wx.DD_DEFAULT_STYLE)
         if dlg.ShowModal() == wx.ID_OK:
-            paths = dlg.GetPaths()
+            paths = [dlg.GetPath()]
             self.panel.update_display(paths)
         dlg.Destroy()
 
@@ -225,7 +226,10 @@ class MainFrame(wx.Frame):
         self.Close()
 
     def on_remove(self, event):
-        pass
+        selected_items = self.panel.archive_olv.GetSelectedObjects()
+        # TODO - Ask if you really want to remove item(s)
+        self.panel.archive_olv.RemoveObjects(selected_items)
+        print()
 
 if __name__ == "__main__":
     app = wx.App(False)
