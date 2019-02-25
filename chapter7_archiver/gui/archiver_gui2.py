@@ -10,9 +10,8 @@ import wx.lib.agw.multidirdialog as MDD
 
 from ObjectListView import ObjectListView, ColumnDefn
 
-wildcard = "Tar (*.tar)|*.tar|"
-
 open_wildcard = "All files (*.*)|*.*"
+
 
 class Items:
 
