@@ -9,9 +9,6 @@ import wx
 
 from ObjectListView import ObjectListView, ColumnDefn
 
-wildcard = "Tar (*.tar)|*.tar|"
-
-open_wildcard = "All files (*.*)|*.*"
 
 class Items:
 
@@ -49,7 +46,7 @@ class ArchivePanel(wx.Panel):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         h_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        # Create iinput widget
+        # Create input widget
         self.archive_olv = ObjectListView(
             self, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
         self.archive_olv.SetEmptyListMsg("Add Files / Folders here")
