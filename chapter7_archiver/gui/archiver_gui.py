@@ -83,10 +83,11 @@ class ArchivePanel(wx.Panel):
         dlg = wx.DirDialog(self, "Choose a directory:",
                            style=wx.DD_DEFAULT_STYLE,
                            defaultPath=self.current_directory)
-        archive_filename = self.archive_filename.GetValue()
+        
         if dlg.ShowModal() == wx.ID_OK:
             path = dlg.GetPath()
             self.current_directory = path
+            archive_filename = self.archive_filename.GetValue()
             archive_type = self.archive_types.GetValue()
 
             full_save_path = pathlib.Path(
