@@ -114,7 +114,7 @@ class RecordDialog(wx.Dialog):
 
         # show dialog upon completion
         show_message("Book Added",
-                       "Success!", wx.ICON_INFORMATION)
+                     "Success!", wx.ICON_INFORMATION)
 
         # clear dialog so we can add another book
         for child in self.GetChildren():
