@@ -106,7 +106,8 @@ class ArchivePanel(wx.Panel):
 
     def update_archive(self):
         self.archive_olv.SetColumns([
-                            ColumnDefn("Name", "left", 350, "name"),
+                            ColumnDefn("Name", "left", 100, "name"),
+                            ColumnDefn("Path", "left", 350, "path"),
                             ColumnDefn("Size", "left", 75, "size"),
                             ColumnDefn("Type", "right", 75, "item_type"),
                             ColumnDefn("Modified", "left", 150, "modified")
