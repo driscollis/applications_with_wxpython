@@ -164,6 +164,9 @@ class MainFrame(wx.Frame):
         self.panel = ArchivePanel(self)
         self.create_menu()
         self.create_toolbar()
+        
+        self.statusbar = self.CreateStatusBar(1)
+        self.statusbar.SetStatusText('Welcome to PyArchiver!')
 
         self.Show()
 
