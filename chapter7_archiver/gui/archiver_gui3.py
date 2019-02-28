@@ -165,7 +165,7 @@ class MainFrame(wx.Frame):
         self.create_menu()
         self.create_toolbar()
         
-        self.statusbar = self.CreateStatusBar(1)
+        self.statusbar = self.CreateStatusBar()
         self.statusbar.SetStatusText('Welcome to PyArchiver!')
 
         self.Show()
@@ -212,24 +212,24 @@ class MainFrame(wx.Frame):
         
         add_ico = wx.ArtProvider.GetBitmap(
             wx.ART_PLUS, wx.ART_TOOLBAR, (16, 16))
-        add_file_tool = self.toolbar.AddSimpleTool(
-            wx.ID_ANY, add_ico, 'Add File', 
+        add_file_tool = self.toolbar.AddTool(
+            wx.ID_ANY, 'Add File', add_ico,
             'Add a file to be archived')
         self.Bind(wx.EVT_MENU, self.on_add_file,
                   add_file_tool)
         
         add_folder_ico = wx.ArtProvider.GetBitmap(
             wx.ART_FOLDER_OPEN, wx.ART_TOOLBAR, (16, 16))
-        add_folder_tool = self.toolbar.AddSimpleTool(
-            wx.ID_ANY, add_folder_ico, 'Add Folder', 
+        add_folder_tool = self.toolbar.AddTool(
+            wx.ID_ANY, 'Add Folder', add_folder_ico,
             'Add a folder to be archived')
         self.Bind(wx.EVT_MENU, self.on_add_folder,
                   add_folder_tool)
         
         remove_ico = wx.ArtProvider.GetBitmap(
             wx.ART_MINUS, wx.ART_TOOLBAR, (16, 16))
-        remove_tool = self.toolbar.AddSimpleTool(
-            wx.ID_ANY, remove_ico, 'Remove',
+        remove_tool = self.toolbar.AddTool(
+            wx.ID_ANY, 'Remove', remove_ico,
             'Remove selected item')
         self.Bind(wx.EVT_MENU, self.on_remove, remove_tool)
         
