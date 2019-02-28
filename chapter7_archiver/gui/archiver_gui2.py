@@ -1,4 +1,4 @@
-# archiver_gui.py
+# archiver_gui2.py
 
 import controller
 
@@ -108,7 +108,8 @@ class ArchivePanel(wx.Panel):
 
     def update_archive(self):
         self.archive_olv.SetColumns([
-                            ColumnDefn("Name", "left", 350, "name"),
+                            ColumnDefn("Name", "left", 100, "name"),
+                            ColumnDefn("Path", "left", 350, "path"),
                             ColumnDefn("Size", "left", 75, "size"),
                             ColumnDefn("Type", "right", 75, "item_type"),
                             ColumnDefn("Modified", "left", 150, "modified")
@@ -175,7 +176,8 @@ class MainFrame(wx.Frame):
             wx.ID_ANY, "Exit",
             "Exit the application")
         menu_bar.Append(file_menu, '&File')
-        self.Bind(wx.EVT_MENU, self.on_exit, exit_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_exit, 
+                  exit_menu_item)
 
         # Create edit menu
         edit_menu = wx.Menu()
@@ -183,17 +185,20 @@ class MainFrame(wx.Frame):
         add_file_menu_item = edit_menu.Append(
             wx.ID_ANY, 'Add File',
             'Add a file to be archived')
-        self.Bind(wx.EVT_MENU, self.on_add_file, add_file_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_add_file,
+                  add_file_menu_item)
 
         add_folder_menu_item = edit_menu.Append(
             wx.ID_ANY, 'Add Folder',
             'Add a folder to be archived')
-        self.Bind(wx.EVT_MENU, self.on_add_folder, add_folder_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_add_folder,
+                  add_folder_menu_item)
 
         remove_menu_item = edit_menu.Append(
             wx.ID_ANY, 'Remove File/Folder',
             'Remove a file or folder')
-        self.Bind(wx.EVT_MENU, self.on_remove, remove_menu_item)
+        self.Bind(wx.EVT_MENU, self.on_remove, 
+                  remove_menu_item)
         menu_bar.Append(edit_menu, 'Edit')
 
         self.SetMenuBar(menu_bar)
@@ -226,9 +231,7 @@ class MainFrame(wx.Frame):
 
     def on_remove(self, event):
         selected_items = self.panel.archive_olv.GetSelectedObjects()
-        # TODO - Ask if you really want to remove item(s)
         self.panel.archive_olv.RemoveObjects(selected_items)
-        print()
 
 if __name__ == "__main__":
     app = wx.App(False)
