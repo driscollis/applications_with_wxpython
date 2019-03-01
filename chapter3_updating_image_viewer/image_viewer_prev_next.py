@@ -94,6 +94,14 @@ class ImagePanel(wx.Panel):
     
         self.image_ctrl.SetBitmap(wx.Bitmap(img))
         self.Refresh()
+    
+    def reset(self):
+        img = wx.Image(self.max_size,
+                       self.max_size)
+        bmp = wx.Bitmap(img)
+        self.image_ctrl.SetBitmap(bmp)
+        self.current_photo = 0
+        self.photos = []
         
 
 class MainFrame(wx.Frame):
@@ -134,7 +142,8 @@ class MainFrame(wx.Frame):
                 if photos:
                     self.panel.update_photo(photos[0])
                     self.panel.total_photos = len(photos)
-
+                else:
+                    self.panel.reset()
 
 if __name__ == '__main__':
     app = wx.App(redirect=False)

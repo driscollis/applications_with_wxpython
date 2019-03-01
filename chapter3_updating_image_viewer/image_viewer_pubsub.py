@@ -98,6 +98,7 @@ class ImagePanel(wx.Panel):
         self.photos = photos
         self.total_photos = len(self.photos)
         self.update_photo(self.photos[0])
+        self.current_photo = 0
         
     def update_photo(self, image):
         """
@@ -117,6 +118,14 @@ class ImagePanel(wx.Panel):
     
         self.image_ctrl.SetBitmap(wx.Bitmap(img))
         self.Refresh()
+    
+    def reset(self):
+        img = wx.Image(self.max_size,
+                       self.max_size)
+        bmp = wx.Bitmap(img)
+        self.image_ctrl.SetBitmap(bmp)
+        self.current_photo = 0
+        self.photos = []
         
 
 class MainFrame(wx.Frame):
@@ -155,6 +164,8 @@ class MainFrame(wx.Frame):
                 photos = glob.glob(os.path.join(self.folderPath, '*.jpg'))
                 if photos:
                     pub.sendMessage("update", photos=photos)
+                else:
+                    self.panel.reset()
 
 
 if __name__ == '__main__':
