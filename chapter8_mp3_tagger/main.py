@@ -1,4 +1,7 @@
+# mp3_tag_editor.py
+
 import eyed3
+import editor
 import glob
 import wx
 
@@ -33,7 +36,10 @@ class TaggerPanel(wx.Panel):
         self.SetSizer(main_sizer)
 
     def edit_mp3(self, event):
-        pass
+        selection = self.mp3_olv.GetSelectedObject()
+        if selection:
+            with editor.Mp3TagEditorDialog(selection.id3) as dlg:
+                dlg.ShowModal()
 
     def load_mp3s(self, path):
         mp3_paths = glob.glob(path + '/*.mp3')
