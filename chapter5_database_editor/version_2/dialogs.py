@@ -68,7 +68,7 @@ class RecordDialog(wx.Dialog):
         btn_sizer.Add(cancel_btn, 0, wx.ALL, 5)
 
         main_sizer.Add(btn_sizer, 0, wx.CENTER)
-        self.SetSizer(main_sizer)
+        self.SetSizerAndFit(main_sizer)
 
     def get_data(self):
         """
