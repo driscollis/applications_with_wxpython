@@ -9,10 +9,11 @@ from ObjectListView import ObjectListView, ColumnDefn
 
 class Mp3:
 
-    def __init__(self, artist, album, title, id3):
-        self.artist = artist
-        self.album = album
-        self.title = title
+    def __init__(self, id3):
+        self.artist = id3.tag.artist
+        self.album = id3.tag.album
+        self.title = id3.tag.title
+        self.year = id3.tag.best_release_date.year
         self.id3 = id3
 
 
@@ -45,15 +46,16 @@ class TaggerPanel(wx.Panel):
         mp3_paths = glob.glob(path + '/*.mp3')
         for mp3_path in mp3_paths:
             id3 = eyed3.load(mp3_path)
-            mp3_obj = Mp3(id3.tag.artist, id3.tag.album, id3.tag.title, id3)
+            mp3_obj = Mp3(id3)
             self.mp3s.append(mp3_obj)
         self.update_mp3_info()
 
     def update_mp3_info(self):
         self.mp3_olv.SetColumns([
-        ColumnDefn("Artist", "left", 100, "artist"),
-                ColumnDefn("Album", "left", 100, "album"),
-                ColumnDefn("Title", "left", 150, "title")
+            ColumnDefn("Artist", "left", 100, "artist"),
+            ColumnDefn("Album", "left", 100, "album"),
+            ColumnDefn("Title", "left", 150, "title"),
+            ColumnDefn("Year", "left", 100, "year")
         ])
         self.mp3_olv.SetObjects(self.mp3s)
 
