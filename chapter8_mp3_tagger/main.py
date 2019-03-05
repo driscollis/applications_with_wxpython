@@ -62,7 +62,7 @@ class TaggerFrame(wx.Frame):
 
     def __init__(self):
         super().__init__(
-            None, title="Mp3 Tag Editor")
+            None, title="Serpent - MP3 Editor")
         self.panel = TaggerPanel(self)
         self.create_menu()
         self.Show()
