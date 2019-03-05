@@ -66,7 +66,7 @@ class MainPanel(wx.Panel):
         
         Load the database file into the application
         
-        Populates the table combobox
+        Populate the table combobox
         """
         wildcard = "All files (*.*)|*.*"
         with wx.FileDialog(
