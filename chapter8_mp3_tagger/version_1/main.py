@@ -1,4 +1,4 @@
-# mp3_tag_editor.py
+# main.py
 
 import eyed3
 import editor
@@ -81,12 +81,11 @@ class TaggerFrame(wx.Frame):
         self.SetMenuBar(menu_bar)
 
     def on_open_folder(self, event):
-        dlg = wx.DirDialog(self, "Choose a directory:",
-                           style=wx.DD_DEFAULT_STYLE,
-                           )
-        if dlg.ShowModal() == wx.ID_OK:
-            self.panel.load_mp3s(dlg.GetPath())
-        dlg.Destroy()
+        with wx.DirDialog(self, "Choose a directory:",
+                          style=wx.DD_DEFAULT_STYLE,
+                          ) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                self.panel.load_mp3s(dlg.GetPath())
 
 
 if __name__ == '__main__':

@@ -1,3 +1,5 @@
+# editor.py
+
 import wx
 
 class Mp3TagEditorDialog(wx.Dialog):
