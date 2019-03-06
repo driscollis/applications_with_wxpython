@@ -131,9 +131,9 @@ class RecordDialog(wx.Dialog):
         """
         Edit a record in the database
         """
-        authorDict, bookDict = self.get_data()
-        comboDict = {**authorDict, **bookDict}
-        controller.edit_record(self.session, self.selected_row.id, comboDict)
+        author_dict, book_dict = self.get_data()
+        combo_dict = {**author_dict, **book_dict}
+        controller.edit_record(self.session, self.selected_row.id, combo_dict)
         show_message("Book Edited Successfully!", "Success",
                        wx.ICON_INFORMATION)
         self.Destroy()

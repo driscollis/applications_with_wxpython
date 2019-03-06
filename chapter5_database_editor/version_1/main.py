@@ -26,7 +26,8 @@ class BookPanel(wx.Panel):
         search_label.SetFont(font)
         search_sizer.Add(search_label, 0, wx.ALL, 5)
     
-        self.categories = wx.ComboBox(self, value="Author", choices=categories)
+        self.categories = wx.ComboBox(self, value="Author", 
+                                      choices=categories)
         search_sizer.Add(self.categories, 0, wx.ALL, 5)
     
         self.search_ctrl = wx.SearchCtrl(self, style=wx.TE_PROCESS_ENTER)
@@ -34,7 +35,7 @@ class BookPanel(wx.Panel):
         search_sizer.Add(self.search_ctrl, 0, wx.ALL, 5)
     
         self.book_results_olv = ObjectListView(self, style=wx.LC_REPORT
-                                                 |wx.SUNKEN_BORDER)
+                                               |wx.SUNKEN_BORDER)
         self.book_results_olv.SetEmptyListMsg("No Records Found")
         self.update_book_results()
     
