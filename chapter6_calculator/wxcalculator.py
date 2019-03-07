@@ -1,3 +1,5 @@
+# wxcalculator.py
+
 import wx
 
 
