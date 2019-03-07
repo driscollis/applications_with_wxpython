@@ -22,6 +22,7 @@ class CalcPanel(wx.Panel):
         
         self.solution = wx.TextCtrl(self, style=wx.TE_RIGHT)
         self.solution.SetFont(font)
+        # Replace Disable() with Bind()
         self.solution.Bind(wx.EVT_TEXT, self.on_key)
         main_sizer.Add(self.solution, 0, wx.EXPAND|wx.ALL, 5)
         self.running_total = wx.StaticText(self)
