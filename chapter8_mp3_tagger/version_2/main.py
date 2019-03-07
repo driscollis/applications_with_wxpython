@@ -3,6 +3,7 @@
 import eyed3
 import editor
 import glob
+import os
 import wx
 
 from ObjectListView import ObjectListView, ColumnDefn
@@ -17,16 +18,29 @@ class Mp3:
         self.id3 = id3
 
 
+class DropTarget(wx.FileDropTarget):
+
+    def __init__(self, window):
+        super().__init__()
+        self.window = window
+
+    def OnDropFiles(self, x, y, filenames):
+        self.window.update_on_drop(filenames)
+        return True
+
+
 class TaggerPanel(wx.Panel):
 
     def __init__(self, parent):
         super().__init__(parent)
         self.mp3s = []
+        drop_target = DropTarget(self)
         main_sizer = wx.BoxSizer(wx.VERTICAL)
 
         self.mp3_olv = ObjectListView(
             self, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.mp3_olv.SetEmptyListMsg("No Mp3s Found")
+        self.mp3_olv.SetDropTarget(drop_target)
         self.update_mp3_info()
         main_sizer.Add(self.mp3_olv, 1, wx.ALL | wx.EXPAND, 5)
 
@@ -41,14 +55,27 @@ class TaggerPanel(wx.Panel):
         if selection:
             with editor.Mp3TagEditorDialog(selection.id3) as dlg:
                 dlg.ShowModal()
-
-    def load_mp3s(self, path):
-        mp3_paths = glob.glob(path + '/*.mp3')
+                
+    def find_mp3s(self, folder):
+        mp3_paths = glob.glob(folder + '/*.mp3')
         for mp3_path in mp3_paths:
             id3 = eyed3.load(mp3_path)
             mp3_obj = Mp3(id3)
             self.mp3s.append(mp3_obj)
+
+    def load_mp3s(self, path):
+        self.find_mp3s(path)
         self.update_mp3_info()
+        
+    def update_on_drop(self, paths):
+        for path in paths:
+            if os.path.isdir(path):
+                self.load_mp3s(path)
+            elif os.path.isfile(path):
+                id3 = eyed3.load(path)
+                mp3_obj = Mp3(id3)
+                self.mp3s.append(mp3_obj)
+                self.update_mp3_info()
 
     def update_mp3_info(self):
         self.mp3_olv.SetColumns([
@@ -67,6 +94,7 @@ class TaggerFrame(wx.Frame):
             None, title="Serpent - MP3 Editor")
         self.panel = TaggerPanel(self)
         self.create_menu()
+        self.create_tool_bar()
         self.Show()
 
     def create_menu(self):
@@ -79,6 +107,18 @@ class TaggerFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_open_folder,
                   open_folder_menu_item)
         self.SetMenuBar(menu_bar)
+        
+    def create_tool_bar(self):
+        self.toolbar = self.CreateToolBar()
+        
+        add_folder_ico = wx.ArtProvider.GetBitmap(
+            wx.ART_FOLDER_OPEN, wx.ART_TOOLBAR, (16, 16))
+        add_folder_tool = self.toolbar.AddTool(
+            wx.ID_ANY, 'Add Folder', add_folder_ico,
+            'Add a folder to be archived')
+        self.Bind(wx.EVT_MENU, self.on_open_folder,
+                  add_folder_tool)
+        self.toolbar.Realize()
 
     def on_open_folder(self, event):
         with wx.DirDialog(self, "Choose a directory:",
