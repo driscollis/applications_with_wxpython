@@ -90,7 +90,7 @@ class RecordDialog(wx.Dialog):
             show_message("Author and Title are Required!",
                          "Error")
             return None, None
-            
+
         if "-" in isbn:
             isbn = isbn.replace("-", "")
         author_dict["first_name"] = fName
@@ -108,7 +108,7 @@ class RecordDialog(wx.Dialog):
         authorDict, bookDict = self.get_data()
         if authorDict is None or bookDict is None:
             return
-        
+
         data = ({"author":authorDict, "book":bookDict})
         controller.add_record(self.session, data)
 
@@ -125,7 +125,7 @@ class RecordDialog(wx.Dialog):
         """
         Close the dialog
         """
-        self.Destroy()
+        self.Close()
 
     def on_edit(self):
         """
