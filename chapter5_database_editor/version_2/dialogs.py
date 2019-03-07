@@ -105,11 +105,11 @@ class RecordDialog(wx.Dialog):
         """
         Add the record to the database
         """
-        authorDict, bookDict = self.get_data()
-        if authorDict is None or bookDict is None:
+        author_dict, book_dict = self.get_data()
+        if author_dict is None or book_dict is None:
             return
 
-        data = ({"author":authorDict, "book":bookDict})
+        data = ({"author":author_dict, "book":book_dict})
         controller.add_record(self.session, data)
 
         # show dialog upon completion
@@ -136,7 +136,7 @@ class RecordDialog(wx.Dialog):
         controller.edit_record(self.session, self.selected_row.id, combo_dict)
         show_message("Book Edited Successfully!", "Success",
                        wx.ICON_INFORMATION)
-        self.Destroy()
+        self.Close()
 
     def on_record(self, event):
         """
