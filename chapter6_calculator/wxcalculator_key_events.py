@@ -87,7 +87,7 @@ class CalcPanel(wx.Panel):
                 self.empty = False
             else:
                 self.solution.SetValue(current_equation + text)
-        elif text in operators and current_equation is not '' \
+        elif text in operators and current_equation != '' \
              and self.last_button_pressed not in operators:
             self.solution.SetValue(current_equation + ' ' + text)
         

@@ -52,7 +52,7 @@ class CalcPanel(wx.Panel):
                 self.solution.SetValue(current_equation + ' ' + label)
             else:
                 self.solution.SetValue(current_equation + label)
-        elif label in operators and current_equation is not '' \
+        elif label in operators and current_equation != '' \
              and self.last_button_pressed not in operators:
             self.solution.SetValue(current_equation + ' ' + label)
         
