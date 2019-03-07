@@ -8,9 +8,10 @@ class CalcPanel(wx.Panel):
     def __init__(self, parent):
         super().__init__(parent)
         self.last_button_pressed = None
-        self.whitelist = ['0', '1', '2', '3', '4',
-                          '5', '6', '7', '8', '9',
-                          '-', '+', '/', '*', '.']
+        self.whitelist = [['7', '8', '9', '/'],
+                          ['4', '5', '6', '*'],
+                          ['1', '2', '3', '-'],
+                          ['.', '0', '', '+']]
         self.on_key_called = False
         self.empty = True
         self.create_ui()
@@ -26,12 +27,7 @@ class CalcPanel(wx.Panel):
         self.running_total = wx.StaticText(self)
         main_sizer.Add(self.running_total, 0, wx.ALIGN_RIGHT)
         
-        buttons = [['7', '8', '9', '/'],
-                   ['4', '5', '6', '*'],
-                   ['1', '2', '3', '-'],
-                   ['.', '0', '', '+']]
-
-        for label_list in buttons:
+        for label_list in self.whitelist:
             btn_sizer = wx.BoxSizer()
             for label in label_list:
                 button = wx.Button(self, label=label)
