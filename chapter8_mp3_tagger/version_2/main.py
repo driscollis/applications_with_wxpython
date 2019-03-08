@@ -69,9 +69,10 @@ class TaggerPanel(wx.Panel):
         
     def update_on_drop(self, paths):
         for path in paths:
+            ext = os.path.splitext(path)[1]
             if os.path.isdir(path):
                 self.load_mp3s(path)
-            elif os.path.isfile(path):
+            elif os.path.isfile(path) and ext.lower() == '.mp3':
                 id3 = eyed3.load(path)
                 mp3_obj = Mp3(id3)
                 self.mp3s.append(mp3_obj)
