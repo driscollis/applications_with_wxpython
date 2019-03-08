@@ -35,15 +35,15 @@ class TaggerPanel(wx.Panel):
         super().__init__(parent)
         self.mp3s = []
         drop_target = DropTarget(self)
+        self.SetDropTarget(drop_target)
         main_sizer = wx.BoxSizer(wx.VERTICAL)
 
         self.mp3_olv = ObjectListView(
             self, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.mp3_olv.SetEmptyListMsg("No Mp3s Found")
-        self.mp3_olv.SetDropTarget(drop_target)
+        
         self.update_mp3_info()
         main_sizer.Add(self.mp3_olv, 1, wx.ALL | wx.EXPAND, 5)
-
         edit_btn = wx.Button(self, label='Edit Mp3')
         edit_btn.Bind(wx.EVT_BUTTON, self.edit_mp3)
         main_sizer.Add(edit_btn, 0, wx.ALL | wx.CENTER, 5)

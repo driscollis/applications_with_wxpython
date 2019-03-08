@@ -41,6 +41,7 @@ class ArchivePanel(wx.Panel):
         super().__init__(parent)
         font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL)
         drop_target = DropTarget(self)
+        self.SetDropTarget(drop_target)
         self.archive_items = []
         paths = wx.StandardPaths.Get()
         self.current_directory = paths.GetDocumentsDir()
@@ -52,8 +53,7 @@ class ArchivePanel(wx.Panel):
         # Create iinput widget
         self.archive_olv = ObjectListView(
             self, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
-        self.archive_olv.SetEmptyListMsg("Add Files / Folders here")
-        self.archive_olv.SetDropTarget(drop_target)
+        self.archive_olv.SetEmptyListMsg("Add Files / Folders here")        
         self.update_archive()
         main_sizer.Add(self.archive_olv, 1, wx.ALL|wx.EXPAND, 5)
 
