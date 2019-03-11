@@ -53,7 +53,7 @@ class ArchivePanel(wx.Panel):
         # Create iinput widget
         self.archive_olv = ObjectListView(
             self, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
-        self.archive_olv.SetEmptyListMsg("Add Files / Folders here")        
+        self.archive_olv.SetEmptyListMsg("Add Files / Folders here")
         self.update_archive()
         main_sizer.Add(self.archive_olv, 1, wx.ALL|wx.EXPAND, 5)
 
@@ -83,28 +83,28 @@ class ArchivePanel(wx.Panel):
                               'Error', wx.ICON_ERROR)
             return
 
-        dlg = wx.DirDialog(self, "Choose a directory:",
-                           style=wx.DD_DEFAULT_STYLE,
-                           defaultPath=self.current_directory)
-        archive_filename = self.archive_filename.GetValue()
-        if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()
-            self.current_directory = path
-            archive_type = self.archive_types.GetValue()
-
-            full_save_path = pathlib.Path(
-                path, '{filename}.{type}'.format(
-                    filename=archive_filename,
-                    type=archive_type.lower()
-                ))
-            controller.create_archive(
-                full_save_path,
-                self.archive_olv.GetObjects(),
-                archive_type)
-            message = f'Archive created at {full_save_path}'
-            self.show_message(message, 'Archive Created',
-                              wx.ICON_INFORMATION)
-        dlg.Destroy()
+        with wx.DirDialog(
+            self, "Choose a directory:",
+            style=wx.DD_DEFAULT_STYLE,
+            defaultPath=self.current_directory) as dlg:
+            archive_filename = self.archive_filename.GetValue()
+            if dlg.ShowModal() == wx.ID_OK:
+                path = dlg.GetPath()
+                self.current_directory = path
+                archive_type = self.archive_types.GetValue()
+    
+                full_save_path = pathlib.Path(
+                    path, '{filename}.{type}'.format(
+                        filename=archive_filename,
+                        type=archive_type.lower()
+                    ))
+                controller.create_archive(
+                    full_save_path,
+                    self.archive_olv.GetObjects(),
+                    archive_type)
+                message = f'Archive created at {full_save_path}'
+                self.show_message(message, 'Archive Created',
+                                  wx.ICON_INFORMATION)
 
     def update_archive(self):
         self.archive_olv.SetColumns([
@@ -236,27 +236,25 @@ class MainFrame(wx.Frame):
         self.toolbar.Realize()
 
     def on_add_file(self, event):
-        dlg = wx.FileDialog(
-        self, message="Choose a file",
+        with wx.FileDialog(
+            self, message="Choose a file",
             defaultDir=self.panel.current_directory,
             defaultFile="",
             wildcard=open_wildcard,
             style=wx.FD_OPEN | wx.FD_MULTIPLE | wx.FD_CHANGE_DIR
-        )
-        if dlg.ShowModal() == wx.ID_OK:
-            paths = dlg.GetPaths()
-            self.panel.update_display(paths)
-        dlg.Destroy()
+            ) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                paths = dlg.GetPaths()
+                self.panel.update_display(paths)
 
     def on_add_folder(self, event):
-        dlg = wx.DirDialog(
+        with wx.DirDialog(
             self, message="Choose a directory:",
             defaultPath=self.panel.current_directory,
-            style=wx.DD_DEFAULT_STYLE)
-        if dlg.ShowModal() == wx.ID_OK:
-            paths = [dlg.GetPath()]
-            self.panel.update_display(paths)
-        dlg.Destroy()
+            style=wx.DD_DEFAULT_STYLE) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                paths = [dlg.GetPath()]
+                self.panel.update_display(paths)
 
     def on_exit(self, event):
         self.Close()

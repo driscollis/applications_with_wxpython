@@ -80,29 +80,28 @@ class ArchivePanel(wx.Panel):
                               'Error', wx.ICON_ERROR)
             return
 
-        dlg = wx.DirDialog(self, "Choose a directory:",
-                           style=wx.DD_DEFAULT_STYLE,
-                           defaultPath=self.current_directory)
-        
-        if dlg.ShowModal() == wx.ID_OK:
-            path = dlg.GetPath()
-            self.current_directory = path
-            archive_filename = self.archive_filename.GetValue()
-            archive_type = self.archive_types.GetValue()
-
-            full_save_path = pathlib.Path(
-                path, '{filename}.{type}'.format(
-                    filename=archive_filename,
-                    type=archive_type.lower()
-                ))
-            controller.create_archive(
-                full_save_path,
-                self.archive_olv.GetObjects(),
-                archive_type)
-            message = f'Archive created at {full_save_path}'
-            self.show_message(message, 'Archive Created',
-                              wx.ICON_INFORMATION)
-        dlg.Destroy()
+        with wx.DirDialog(
+            self, "Choose a directory:",
+            style=wx.DD_DEFAULT_STYLE,
+            defaultPath=self.current_directory) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                path = dlg.GetPath()
+                self.current_directory = path
+                archive_filename = self.archive_filename.GetValue()
+                archive_type = self.archive_types.GetValue()
+    
+                full_save_path = pathlib.Path(
+                    path, '{filename}.{type}'.format(
+                        filename=archive_filename,
+                        type=archive_type.lower()
+                    ))
+                controller.create_archive(
+                    full_save_path,
+                    self.archive_olv.GetObjects(),
+                    archive_type)
+                message = f'Archive created at {full_save_path}'
+                self.show_message(message, 'Archive Created',
+                                  wx.ICON_INFORMATION)
 
     def update_archive(self):
         self.archive_olv.SetColumns([
