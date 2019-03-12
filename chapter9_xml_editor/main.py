@@ -40,6 +40,49 @@ class NewPage(wx.Panel):
     
         if self.xml_root is not None:
             self.create_editor()
+            
+    def create_editor(self):
+        """
+        Create the XML editor widgets
+        """
+        page_sizer = wx.BoxSizer(wx.VERTICAL)
+    
+        splitter = wx.SplitterWindow(self)
+        tree_panel = BoomTreePanel(splitter, self.xml_root, self.page_id)
+    
+        xml_editor_notebook = wx.Notebook(splitter)
+        xml_editor_panel = XmlEditorPanel(xml_editor_notebook, self.page_id)
+        xml_editor_notebook.AddPage(xml_editor_panel, 'Nodes')
+    
+        attribute_panel = AttributeEditorPanel(
+                xml_editor_notebook, self.page_id)
+        xml_editor_notebook.AddPage(attribute_panel, 'Attributes')
+    
+        splitter.SplitVertically(tree_panel, xml_editor_notebook)
+        splitter.SetMinimumPaneSize(self.size[0] / 2)
+        page_sizer.Add(splitter, 1, wx.ALL|wx.EXPAND, 5)
+    
+        self.SetSizer(page_sizer)
+        self.Layout()
+    
+        self.Bind(wx.EVT_CLOSE, self.on_close)
+
+    def parse_xml(self, xml_path):
+        """
+        Parses the XML from the file that is passed in
+        """
+        self.current_directory = os.path.dirname(xml_path)
+        try:
+            self.xml_tree = ET.parse(xml_path)
+        except IOError:
+            print('Bad file')
+            return
+        except Exception as e:
+            print('Really bad error')
+            print(e)
+            return
+
+        self.xml_root = self.xml_tree.getroot()
         
 
 
