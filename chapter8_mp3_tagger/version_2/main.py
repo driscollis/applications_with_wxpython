@@ -11,11 +11,44 @@ from ObjectListView import ObjectListView, ColumnDefn
 class Mp3:
 
     def __init__(self, id3):
-        self.artist = id3.tag.artist
-        self.album = id3.tag.album
-        self.title = id3.tag.title
-        self.year = id3.tag.best_release_date.year
+        self.artist = ''
+        self.album = ''
+        self.title = ''
+        self.year = ''
+
+        # Attempt to extract MP3 tags
+        if not isinstance(id3.tag, type(None)):
+            self.artist = self.normalize_mp3(
+                id3.tag.artist)
+            self.album = self.normalize_mp3(
+                id3.tag.album)
+            self.title = self.normalize_mp3(
+                id3.tag.title)
+            if hasattr(id3.tag, 'best_release_date'):
+                if not isinstance(
+                    id3.tag.best_release_date, type(None)):
+                    self.year = self.normalize_mp3(
+                        id3.tag.best_release_date.year)
+                else:
+                    id3.tag.release_date = 2019
+                    self.year = self.normalize_mp3(
+                        id3.tag.best_release_date.year)
+        else:
+            self.artist = 'Unknown'
+            self.album = 'Unknown'
+            self.title = 'Unknown'
+            self.year = 'Unknown'
+            tag = id3.initTag()
         self.id3 = id3
+
+    def normalize_mp3(self, tag):
+        try:
+            if tag:
+                return tag
+            else:
+                return 'Unknown'
+        except:
+            return 'Unknown'
 
 
 class DropTarget(wx.FileDropTarget):
@@ -41,7 +74,7 @@ class TaggerPanel(wx.Panel):
         self.mp3_olv = ObjectListView(
             self, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.mp3_olv.SetEmptyListMsg("No Mp3s Found")
-        
+
         self.update_mp3_info()
         main_sizer.Add(self.mp3_olv, 1, wx.ALL | wx.EXPAND, 5)
         edit_btn = wx.Button(self, label='Edit Mp3')
@@ -55,7 +88,7 @@ class TaggerPanel(wx.Panel):
         if selection:
             with editor.Mp3TagEditorDialog(selection.id3) as dlg:
                 dlg.ShowModal()
-                
+
     def find_mp3s(self, folder):
         mp3_paths = glob.glob(folder + '/*.mp3')
         for mp3_path in mp3_paths:
@@ -66,7 +99,7 @@ class TaggerPanel(wx.Panel):
     def load_mp3s(self, path):
         self.find_mp3s(path)
         self.update_mp3_info()
-        
+
     def update_on_drop(self, paths):
         for path in paths:
             ext = os.path.splitext(path)[1]
@@ -108,10 +141,10 @@ class TaggerFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.on_open_folder,
                   open_folder_menu_item)
         self.SetMenuBar(menu_bar)
-        
+
     def create_tool_bar(self):
         self.toolbar = self.CreateToolBar()
-        
+
         add_folder_ico = wx.ArtProvider.GetBitmap(
             wx.ART_FOLDER_OPEN, wx.ART_TOOLBAR, (16, 16))
         add_folder_tool = self.toolbar.AddTool(

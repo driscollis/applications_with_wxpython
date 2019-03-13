@@ -10,11 +10,45 @@ from ObjectListView import ObjectListView, ColumnDefn
 class Mp3:
 
     def __init__(self, id3):
-        self.artist = id3.tag.artist
-        self.album = id3.tag.album
-        self.title = id3.tag.title
-        self.year = id3.tag.best_release_date.year
+        self.artist = ''
+        self.album = ''
+        self.title = ''
+        self.year = ''
+
+        # Attempt to extract MP3 tags
+        if not isinstance(id3.tag, type(None)):
+            self.artist = self.normalize_mp3(
+                id3.tag.artist)
+            self.album = self.normalize_mp3(
+                id3.tag.album)
+            self.title = self.normalize_mp3(
+                id3.tag.title)
+            if hasattr(id3.tag, 'best_release_date'):
+                if not isinstance(
+                    id3.tag.best_release_date, type(None)):
+                    self.year = self.normalize_mp3(
+                        id3.tag.best_release_date.year)
+                else:
+                    id3.tag.release_date = 2019
+                    self.year = self.normalize_mp3(
+                        id3.tag.best_release_date.year)
+        else:
+            self.artist = 'Unknown'
+            self.album = 'Unknown'
+            self.title = 'Unknown'
+            self.year = 'Unknown'
+            tag = id3.initTag()
         self.id3 = id3
+
+    def normalize_mp3(self, tag):
+        try:
+            if tag:
+                return tag
+            else:
+                return 'Unknown'
+        except:
+            return 'Unknown'
+
 
 
 class TaggerPanel(wx.Panel):
