@@ -18,12 +18,15 @@ class Mp3:
 
         # Attempt to extract MP3 tags
         if not isinstance(id3.tag, type(None)):
-            self.artist = self.normalize_mp3(
+            id3.tag.artist = self.normalize_mp3(
                 id3.tag.artist)
-            self.album = self.normalize_mp3(
+            self.artist = id3.tag.artist
+            id3.tag.album = self.normalize_mp3(
                 id3.tag.album)
-            self.title = self.normalize_mp3(
+            self.album = id3.tag.album
+            id3.tag.title = self.normalize_mp3(
                 id3.tag.title)
+            self.title = id3.tag.title
             if hasattr(id3.tag, 'best_release_date'):
                 if not isinstance(
                     id3.tag.best_release_date, type(None)):
@@ -39,11 +42,15 @@ class Mp3:
             self.title = 'Unknown'
             self.year = 'Unknown'
             tag = id3.initTag()
+            tag.release_date = 2019
+            tag.artist = 'Unknown'
+            tag.album = 'Unknown'
+            tag.title = 'Unknown'
         self.id3 = id3
 
     def normalize_mp3(self, tag):
         try:
-            if tag:
+            if tag is not None:
                 return tag
             else:
                 return 'Unknown'
