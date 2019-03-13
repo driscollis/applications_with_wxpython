@@ -23,6 +23,7 @@ class AttributeDialog(EditDialog):
             self.xml_obj.attrib[attr] = value
             pub.sendMessage('ui_updater_{}'.format(self.page_id),
                             xml_obj=self.xml_obj)
+
         else:
             # TODO - Show a dialog telling the user that there is no attr to save
             raise NotImplemented

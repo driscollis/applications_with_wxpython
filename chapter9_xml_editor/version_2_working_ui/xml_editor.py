@@ -1,11 +1,11 @@
 import os
+import lxml.etree as ET
 import wx
 import wx.adv
 import wx.lib.scrolledpanel as scrolled
 
 from add_node_dialog import NodeDialog
 from functools import partial
-from lxml import objectify
 from pubsub import pub
 from wx.lib.wordwrap import wordwrap
 
@@ -19,7 +19,7 @@ class XmlTree(wx.TreeCtrl):
         self.page_id = parent.page_id
         self.expanded= {}
 
-        self.xml_root = objectify.fromstring(parent.xml)
+        self.xml_root = parent.xml.getroot()
         pub.subscribe(self.update_tree,
                       'tree_update_{}'.format(self.page_id))
 
@@ -133,6 +133,16 @@ class AttributeEditorPanel(wx.Panel):
             attr_val = wx.TextCtrl(self, value=val)
             _.Add(attr_val, 1, wx.ALL|wx.EXPAND, 5)
 
+            attr_name.Bind(
+                        wx.EVT_TEXT,
+                        self.on_key_change
+            )
+            attr_val.Bind(
+                        wx.EVT_TEXT, partial(
+                            self.on_val_change,
+                            attr=attr_name
+                        ))
+
             self.widgets.append(attr_val)
             self.main_sizer.Add(_, 0, wx.EXPAND)
         else:
@@ -171,6 +181,26 @@ class AttributeEditorPanel(wx.Panel):
 
         self.widgets = []
         self.Layout()
+
+    def on_key_change(self, event):
+        """
+        Event handler that is called on text change in the
+        attribute key field
+        """
+        new_key = event.GetString()
+        if new_key not in self.xml_obj.attrib:
+            self.xml_obj.attrib[new_key] = state.val_widget.GetValue()
+            state.previous_key = state.current_key
+            state.current_key = new_key
+
+    def on_val_change(self, event, attr):
+        """
+        Event handler that is called on text change in the
+        attribute value field
+        """
+        new_val = event.GetString()
+        self.xml_obj.attrib[attr.GetValue()] = new_val
+
 
 class XmlEditorPanel(scrolled.ScrolledPanel):
     """
@@ -220,6 +250,10 @@ class XmlEditorPanel(scrolled.ScrolledPanel):
                 text = child.text if child.text else ''
 
                 value_txt = wx.TextCtrl(self, value=text)
+                value_txt.Bind(wx.EVT_TEXT,
+                               partial(
+                                   self.on_text_change,
+                                   xml_obj=child))
                 sizer.Add(value_txt, 1, wx.ALL|wx.EXPAND, 5)
                 self.widgets.append(value_txt)
 
@@ -249,6 +283,8 @@ class XmlEditorPanel(scrolled.ScrolledPanel):
         self.widgets.append(tag_txt)
 
         value_txt = wx.TextCtrl(self, value=xml_obj.text)
+        value_txt.Bind(wx.EVT_TEXT, partial(
+            self.on_text_change, xml_obj=xml_obj))
         sizer.Add(value_txt, 1, wx.ALL|wx.EXPAND, 5)
         self.widgets.append(value_txt)
         self.main_sizer.Add(sizer, 0, wx.EXPAND)
@@ -272,9 +308,16 @@ class XmlEditorPanel(scrolled.ScrolledPanel):
         self.widgets = []
         self.Layout()
 
+    def on_text_change(self, event, xml_obj):
+        """
+        An event handler that is called when the text changes in the text
+        control. This will update the passed in xml object to something
+        new
+        """
+        xml_obj.text = event.GetString()
+
     def on_add_node(self, event):
         pub.sendMessage(f'add_node_{self.page_id}')
-
 
 
 class TreePanel(wx.Panel):
@@ -304,6 +347,7 @@ class EditorPanel(wx.Panel):
                       'add_node_{}'.format(self.page_id))
 
         self.xml_path = None
+        self.xml = None
 
         if self.xml_path:
             self.create_editor()
@@ -335,8 +379,7 @@ class EditorPanel(wx.Panel):
 
     def open_xml(self, path='sample.xml'):
         try:
-            with open(path) as f:
-                self.xml = f.read()
+            self.xml = ET.parse(path)
         except IOError:
             print('Bad file')
             return
@@ -347,14 +390,22 @@ class EditorPanel(wx.Panel):
         self.create_editor()
 
     def save(self):
+        path = None
+
         # open save dialog
+        with wx.FileDialog(
+            None, "Save", os.getcwd(),
+            "", "*.xml",
+            wx.FD_SAVE | wx.FD_OVERWRITE_PROMPT) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                path = dlg.GetPath()
 
         if path:
             if '.xml' not in path:
                 path += '.xml'
 
-                # Save the xml
-                self.xml_tree.write(path)
+            # Save the xml
+            self.xml.write(path)
 
     def add_node(self):
         """
