@@ -109,6 +109,9 @@ class TaggerPanel(wx.Panel):
             self.mp3s.append(mp3_obj)
 
     def load_mp3s(self, path):
+        if self.mp3s:
+            # clear the current contents
+            self.mp3s = []
         self.find_mp3s(path)
         self.update_mp3_info()
 

@@ -88,6 +88,9 @@ class TaggerPanel(wx.Panel):
                 self.update_mp3_info()
 
     def load_mp3s(self, path):
+        if self.mp3s:
+            # clear the current contents
+            self.mp3s = []
         mp3_paths = glob.glob(path + '/*.mp3')
         for mp3_path in mp3_paths:
             id3 = eyed3.load(mp3_path)
