@@ -5,7 +5,7 @@ import wx
 class Mp3TagEditorDialog(wx.Dialog):
 
     def __init__(self, mp3):
-        title = f'Editing "{mp3.tag.title}"'
+        title = f'Editing "{mp3.id3.tag.title}"'
         super().__init__(parent=None, title=title)
 
         self.mp3 = mp3
@@ -15,22 +15,22 @@ class Mp3TagEditorDialog(wx.Dialog):
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
 
         size = (200, -1)
-        track_num = str(self.mp3.tag.track_num[0])
-        year = str(self.mp3.tag.best_release_date.year)
+        track_num = str(self.mp3.id3.tag.track_num[0])
+        year = str(self.mp3.id3.tag.best_release_date.year)
 
         self.track_number = wx.TextCtrl(
             self, value=track_num, size=size)
         self.create_row('Track Number', self.track_number)
 
-        self.artist = wx.TextCtrl(self, value=self.mp3.tag.artist,
+        self.artist = wx.TextCtrl(self, value=self.mp3.id3.tag.artist,
                                   size=size)
         self.create_row('Artist', self.artist)
 
-        self.album = wx.TextCtrl(self, value=self.mp3.tag.album,
+        self.album = wx.TextCtrl(self, value=self.mp3.id3.tag.album,
                                  size=size)
         self.create_row('Album', self.album)
 
-        self.title = wx.TextCtrl(self, value=self.mp3.tag.title,
+        self.title = wx.TextCtrl(self, value=self.mp3.id3.tag.title,
                                  size=size)
         self.create_row('Title', self.title)
 
@@ -53,16 +53,17 @@ class Mp3TagEditorDialog(wx.Dialog):
         self.main_sizer.Add(sizer)
 
     def save(self, event):
-        current_track_num = self.mp3.tag.track_num
+        current_track_num = self.mp3.id3.tag.track_num
         if current_track_num:
             new_track_num = (int(self.track_number.GetValue()),
                              current_track_num[1])
         else:
             new_track_num = (int(self.track_number.GetValue()), 0)
 
-        self.mp3.tag.artist = self.artist.GetValue()
-        self.mp3.tag.album = self.album.GetValue()
-        self.mp3.tag.title = self.title.GetValue()
-        self.mp3.tag.track_num = new_track_num
-        self.mp3.tag.save()
+        self.mp3.id3.tag.artist = self.artist.GetValue()
+        self.mp3.id3.tag.album = self.album.GetValue()
+        self.mp3.id3.tag.title = self.title.GetValue()
+        self.mp3.id3.tag.track_num = new_track_num
+        self.mp3.id3.tag.save()
+        self.mp3.update()
         self.Close()

@@ -35,17 +35,15 @@ class Mp3:
                     id3.tag.release_date = 2019
                     self.year = self.normalize_mp3(
                         id3.tag.best_release_date.year)
+            self.id3 = id3
         else:
-            self.artist = 'Unknown'
-            self.album = 'Unknown'
-            self.title = 'Unknown'
-            self.year = 'Unknown'
             tag = id3.initTag()
             tag.release_date = 2019
             tag.artist = 'Unknown'
             tag.album = 'Unknown'
             tag.title = 'Unknown'
-        self.id3 = id3
+            self.id3 = id3
+            self.update()
 
     def normalize_mp3(self, tag):
         try:
@@ -55,6 +53,12 @@ class Mp3:
                 return 'Unknown'
         except:
             return 'Unknown'
+
+    def update(self):
+        self.artist = self.id3.tag.artist
+        self.album = self.id3.tag.album
+        self.title = self.id3.tag.title
+        self.year = self.id3.tag.best_release_date.year
 
 
 class TaggerPanel(wx.Panel):
@@ -79,8 +83,9 @@ class TaggerPanel(wx.Panel):
     def edit_mp3(self, event):
         selection = self.mp3_olv.GetSelectedObject()
         if selection:
-            with editor.Mp3TagEditorDialog(selection.id3) as dlg:
+            with editor.Mp3TagEditorDialog(selection) as dlg:
                 dlg.ShowModal()
+                self.update_mp3_info()
 
     def load_mp3s(self, path):
         mp3_paths = glob.glob(path + '/*.mp3')
