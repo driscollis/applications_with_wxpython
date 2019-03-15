@@ -12,7 +12,9 @@ class MyPanel(wx.Panel):
         button2 = wx.Button(self, label='Second button')
 
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        main_sizer.Add(button, proportion=1, flag=wx.ALL|wx.CENTER|wx.EXPAND, border=5)
+        main_sizer.Add(button, proportion=1,
+                       flag=wx.ALL | wx.CENTER | wx.EXPAND,
+                       border=5)
         main_sizer.Add(button2, 0, wx.ALL, 5)
         self.SetSizer(main_sizer)
 

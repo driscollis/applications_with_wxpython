@@ -11,7 +11,7 @@ class MyPanel(wx.Panel):
         button = wx.Button(self, label='Press Me')
 
         main_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        main_sizer.Add(button, proportion=1, flag=wx.ALL|wx.CENTER, border=5)
+        main_sizer.Add(button, proportion=1, flag=wx.ALL | wx.CENTER, border=5)
         self.SetSizer(main_sizer)
 
 
