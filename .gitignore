@@ -108,3 +108,5 @@ venv.bak/
 *.wpu
 
 *.db
+
+appendix_b_widget_inspection_tool/\.DS_Store
