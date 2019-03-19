@@ -1,3 +1,5 @@
+# xml_viewer.py
+
 import wx
 
 from lxml import etree, objectify
@@ -51,7 +53,7 @@ class XmlTree(wx.TreeCtrl):
                 self.SetItemHasChildren(child)
 
             if element.attrib:
-                self.SetItemData(child, element.attrib)  
+                self.SetItemData(child, element.attrib)
 
 
 class TreePanel(wx.Panel):
@@ -72,7 +74,7 @@ class TreePanel(wx.Panel):
 class MainFrame(wx.Frame):
 
     def __init__(self, xml_path):
-        wx.Frame.__init__(self, parent=None, 
+        wx.Frame.__init__(self, parent=None,
                           title='XML Viewer')
         panel = TreePanel(self, xml_path)
         self.Show()
