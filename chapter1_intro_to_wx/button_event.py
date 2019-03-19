@@ -4,18 +4,18 @@ import wx
 
 
 class MyPanel(wx.Panel):
-    
+
     def __init__(self, parent):
         super().__init__(parent)
-        
+
         button = wx.Button(self, label='Press Me')
-        button.Bind(wx.EVT_BUTTON, self.on_button_press, button)
-        
+        button.Bind(wx.EVT_BUTTON, self.on_button_press)
+
     def on_button_press(self, event):
         print('You pressed the button')
 
 class MyFrame(wx.Frame):
-    
+
     def __init__(self):
         super().__init__(None, title='Hello World')
         panel = MyPanel(self)
