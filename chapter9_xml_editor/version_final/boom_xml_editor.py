@@ -116,7 +116,8 @@ class XmlEditorPanel(scrolled.ScrolledPanel):
         new
         """
         xml_obj.text = event.GetString()
-
+        pub.sendMessage('on_change_{}'.format(self.page_id),
+                        event=None)
 
     def on_add_node(self, event):
         """

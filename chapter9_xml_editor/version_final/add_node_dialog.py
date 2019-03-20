@@ -24,7 +24,8 @@ class NodeDialog(EditDialog):
         element.text = self.value_two.GetValue()
         pub.sendMessage('tree_update_{}'.format(self.page_id),
                         xml_obj=element)
-
+        pub.sendMessage('on_change_{}'.format(self.page_id),
+                        event=None)
         self.Close()
 
 if __name__ == '__main__':

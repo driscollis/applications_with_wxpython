@@ -7,8 +7,8 @@ from lxml import etree, objectify
 
 class XmlTree(wx.TreeCtrl):
 
-    def __init__(self, parent, id, pos, size, style):
-        wx.TreeCtrl.__init__(self, parent, id, pos, size, style)
+    def __init__(self, parent):
+        wx.TreeCtrl.__init__(self, parent)
 
         try:
             with open(parent.xml_path) as f:
@@ -62,9 +62,7 @@ class TreePanel(wx.Panel):
         wx.Panel.__init__(self, parent)
         self.xml_path = xml_path
 
-        self.tree = XmlTree(
-            self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize,
-            wx.TR_HAS_BUTTONS)
+        self.tree = XmlTree(self)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.tree, 0, wx.EXPAND)
