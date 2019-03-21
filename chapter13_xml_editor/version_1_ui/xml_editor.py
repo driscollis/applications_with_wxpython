@@ -249,7 +249,6 @@ class XmlEditorPanel(scrolled.ScrolledPanel):
         pub.sendMessage(f'add_node_{self.page_id}')
 
 
-
 class TreePanel(wx.Panel):
 
     def __init__(self, parent, page_id, xml):
@@ -410,7 +409,6 @@ class MainFrame(wx.Frame):
 
         if path:
             self.panel.open_xml(path)
-            return path
 
     def on_exit(self, event):
         """
