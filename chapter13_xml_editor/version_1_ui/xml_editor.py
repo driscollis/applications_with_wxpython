@@ -4,7 +4,6 @@ import wx.adv
 import wx.lib.scrolledpanel as scrolled
 
 from add_node_dialog import NodeDialog
-from functools import partial
 from lxml import objectify
 from pubsub import pub
 from wx.lib.wordwrap import wordwrap
@@ -319,14 +318,7 @@ class EditorPanel(wx.Panel):
         self.create_editor()
 
     def save(self):
-        # open save dialog
-
-        if path:
-            if '.xml' not in path:
-                path += '.xml'
-
-                # Save the xml
-                self.xml_tree.write(path)
+        print('Saving')
 
     def add_node(self):
         """
@@ -335,6 +327,7 @@ class EditorPanel(wx.Panel):
         Called by pubsub
         """
         print('Add node')
+
 
 class MainFrame(wx.Frame):
 
