@@ -131,7 +131,6 @@ class AttributeEditorPanel(wx.Panel):
             state.previous_key = state.current_key
             state.current_key = new_key
 
-
     def on_val_change(self, event, attr):
         """
         Event handler that is called on text change in the

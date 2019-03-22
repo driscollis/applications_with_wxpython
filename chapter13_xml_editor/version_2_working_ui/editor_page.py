@@ -26,9 +26,7 @@ class NewPage(wx.Panel):
         self.title = os.path.basename(xml_path)
 
         self.app_location = os.path.dirname(os.path.abspath( sys.argv[0] ))
-
         self.tmp_location = os.path.join(self.app_location, 'drafts')
-
         pub.subscribe(self.save, 'save_{}'.format(self.page_id))
 
         self.parse_xml(xml_path)

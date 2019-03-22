@@ -105,15 +105,13 @@ class MainFrame(wx.Frame):
         """
         Update the frame with save status
         """
-        if self.current_page.xml_root is None:
+        if self.current_page is None:
             utils.warn_nothing_to_save()
             return
 
         pub.sendMessage('save_{}'.format(self.current_page.page_id))
 
         self.changed = False
-        msg = 'Last saved at {}'.format(time.strftime('%H:%M:%S',
-                                                      time.localtime()))
 
     def on_open(self, event):
         """

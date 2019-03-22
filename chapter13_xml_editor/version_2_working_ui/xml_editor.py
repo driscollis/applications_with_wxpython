@@ -117,7 +117,6 @@ class XmlEditorPanel(scrolled.ScrolledPanel):
         """
         xml_obj.text = event.GetString()
 
-
     def on_add_node(self, event):
         """
         Event handler that adds an XML node using pubsub
