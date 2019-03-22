@@ -3,7 +3,6 @@ import wx
 import wx.adv
 import wx.lib.scrolledpanel as scrolled
 
-from add_node_dialog import NodeDialog
 from lxml import objectify
 from pubsub import pub
 from wx.lib.wordwrap import wordwrap
@@ -50,15 +49,6 @@ class XmlTree(wx.TreeCtrl):
                     self.SetItemHasChildren(child)
 
         self.expanded[id(xml_obj)] = ''
-
-    def add_book_elements(self, item, book):
-        for element in book.getchildren():
-            child = self.AppendItem(item, element.tag)
-            if element.getchildren():
-                self.SetItemHasChildren(child)
-
-            if element.attrib:
-                self.SetItemData(child, element.attrib)
 
     def on_tree_selection(self, event):
         """
@@ -115,11 +105,11 @@ class AttributeEditorPanel(wx.Panel):
 
             self.widgets.append(attr_val)
             self.main_sizer.Add(_, 0, wx.EXPAND)
-        else:
-            add_attr_btn = wx.Button(self, label='Add Attribute')
-            add_attr_btn.Bind(wx.EVT_BUTTON, self.on_add_attr)
-            self.main_sizer.Add(add_attr_btn, 0, wx.ALL|wx.CENTER, 5)
-            self.widgets.append(add_attr_btn)
+
+        add_attr_btn = wx.Button(self, label='Add Attribute')
+        add_attr_btn.Bind(wx.EVT_BUTTON, self.on_add_attr)
+        self.main_sizer.Add(add_attr_btn, 0, wx.ALL|wx.CENTER, 5)
+        self.widgets.append(add_attr_btn)
 
         self.Layout()
 
@@ -197,15 +187,15 @@ class XmlEditorPanel(scrolled.ScrolledPanel):
                 self.widgets.append(value_txt)
 
                 self.main_sizer.Add(sizer, 0, wx.EXPAND)
-            else:
-                if getattr(xml_obj, 'tag') and getattr(xml_obj, 'text'):
-                    if xml_obj.getchildren() == []:
-                        self.add_single_tag_elements(xml_obj, lbl_size)
 
-                add_node_btn = wx.Button(self, label='Add Node')
-                add_node_btn.Bind(wx.EVT_BUTTON, self.on_add_node)
-                self.main_sizer.Add(add_node_btn, 0, wx.ALL|wx.CENTER, 5)
-                self.widgets.append(add_node_btn)
+            if getattr(xml_obj, 'tag') and getattr(xml_obj, 'text'):
+                if xml_obj.getchildren() == []:
+                    self.add_single_tag_elements(xml_obj, lbl_size)
+
+            add_node_btn = wx.Button(self, label='Add Node')
+            add_node_btn.Bind(wx.EVT_BUTTON, self.on_add_node)
+            self.main_sizer.Add(add_node_btn, 0, wx.ALL|wx.CENTER, 5)
+            self.widgets.append(add_node_btn)
 
             self.SetAutoLayout(1)
             self.SetupScrolling()
