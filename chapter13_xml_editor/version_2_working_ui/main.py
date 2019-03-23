@@ -101,7 +101,7 @@ class MainFrame(wx.Frame):
         """
         self.create_new_editor(xml_path)
 
-    def save(self, location=None):
+    def save(self):
         """
         Update the frame with save status
         """
@@ -117,7 +117,7 @@ class MainFrame(wx.Frame):
         """
         Event handler that is called when you need to open an XML file
         """
-        xml_path = utils.open_file(self)
+        xml_path = utils.open_file()
 
         if xml_path:
             self.last_opened_file = xml_path

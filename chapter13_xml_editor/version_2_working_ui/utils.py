@@ -5,14 +5,14 @@ wildcard = "XML (*.xml)|*.xml|" \
     "All files (*.*)|*.*"
 
 
-def open_file(self, default_dir=os.path.expanduser('~')):
+def open_file(default_dir=os.path.expanduser('~')):
     """
     A utility function for opening a file dialog to allow the user
     to open an XML file of their choice
     """
     path = None
     with wx.FileDialog(
-        self, message="Choose a file",
+        None, message="Choose a file",
         defaultDir=default_dir,
         defaultFile="",
         wildcard=wildcard,
@@ -25,15 +25,15 @@ def open_file(self, default_dir=os.path.expanduser('~')):
         return path
 
 
-def save_file(self):
+def save_file(default_dir):
     """
     A utility function that allows the user to save their XML file
     to a specific location using a file dialog
     """
     path = None
     with wx.FileDialog(
-        self, message="Save file as ...",
-        defaultDir=self.current_directory,
+        None, message="Save file as ...",
+        defaultDir=default_dir,
         defaultFile="", wildcard=wildcard,
         style=wx.FD_SAVE
         ) as dlg:

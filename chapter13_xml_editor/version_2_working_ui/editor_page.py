@@ -94,7 +94,7 @@ class NewPage(wx.Panel):
         Save the XML to disk
         """
         if not location:
-            path = utils.save_file(self)
+            path = utils.save_file(self.current_directory)
         else:
             path = location
 
