@@ -16,8 +16,7 @@ class ImagePanel(wx.Panel):
         self.total_photos = 0
         self.layout()
 
-        pub.subscribe(self.update_photos_via_pubsub,
-                      "update")
+        pub.subscribe(self.update_photos_via_pubsub, "update")
 
         self.slideshow_timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.on_next, self.slideshow_timer)
