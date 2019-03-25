@@ -37,16 +37,6 @@ class XmlTree(wx.TreeCtrl):
         self.Bind(wx.EVT_TREE_ITEM_EXPANDING, self.on_item_expanding)
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.on_tree_selection)
 
-    def add_elements(self, item, book):
-        """
-        Add items to the tree control
-        """
-        for element in book.getchildren():
-            child = self.AppendItem(item, element.tag)
-            self.SetItemData(child, element)
-            if element.getchildren():
-                self.SetItemHasChildren(child)
-
     def on_item_expanding(self, event):
         """
         A handler that fires when a tree item is being expanded
@@ -103,7 +93,6 @@ class XmlTreePanel(wx.Panel):
     def __init__(self, parent, xml_obj, page_id):
         wx.Panel.__init__(self, parent)
         self.xml_root = xml_obj
-        self.copied_data = None
         self.page_id = page_id
 
         pub.subscribe(self.add_node,
@@ -119,15 +108,7 @@ class XmlTreePanel(wx.Panel):
         sizer.Add(self.tree, 1, wx.EXPAND)
         self.SetSizer(sizer)
 
-    def on_add_remove_node(self, event):
-        """
-        Event handler for adding or removing nodes
-        """
-        evt_id = event.GetId()
-        if evt_id == self.add_node_id:
-            self.add_node()
-        elif evt_id == self.remove_node_id:
-            self.remove_node()
+
 
     def add_node(self):
         """
@@ -152,16 +133,14 @@ class XmlTreePanel(wx.Panel):
 
         if node:
             msg = 'Are you sure you want to delete the {node} node'
-            dlg = wx.MessageDialog(
+            with wx.MessageDialog(
                 parent=None,
                 message=msg.format(node=xml_node.tag),
                 caption='Warning',
                 style=wx.YES_NO|wx.YES_DEFAULT|wx.ICON_EXCLAMATION
-            )
-            if dlg.ShowModal() == wx.ID_YES:
-                parent = xml_node.getparent()
-                parent.remove(xml_node)
-                self.tree.DeleteChildren(node)
-                self.tree.Delete(node)
-
-            dlg.Destroy()
+                ) as dlg:
+                if dlg.ShowModal() == wx.ID_YES:
+                    parent = xml_node.getparent()
+                    parent.remove(xml_node)
+                    self.tree.DeleteChildren(node)
+                    self.tree.Delete(node)
