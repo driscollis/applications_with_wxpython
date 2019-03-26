@@ -1,6 +1,3 @@
-# https://images.nasa.gov/docs/images.nasa.gov_api_docs.pdf
-
-#import urllib  # urllib.parse.urlencode(f)
 from urllib.parse import urlencode, quote_plus
 import requests
 
