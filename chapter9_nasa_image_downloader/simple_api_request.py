@@ -1,5 +1,7 @@
-from urllib.parse import urlencode, quote_plus
 import requests
+
+from urllib.parse import urlencode, quote_plus
+
 
 base_url = 'https://images-api.nasa.gov/search'
 search_term = 'apollo 11'
