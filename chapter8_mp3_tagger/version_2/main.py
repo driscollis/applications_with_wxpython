@@ -36,15 +36,14 @@ class Mp3:
                     id3.tag.release_date = 2019
                     self.year = self.normalize_mp3(
                         id3.tag.best_release_date.year)
-            self.id3 = id3
         else:
             tag = id3.initTag()
             tag.release_date = 2019
             tag.artist = 'Unknown'
             tag.album = 'Unknown'
             tag.title = 'Unknown'
-            self.id3 = id3
-            self.update()
+        self.id3 = id3
+        self.update()
 
     def normalize_mp3(self, tag):
         try:
@@ -94,6 +93,11 @@ class TaggerPanel(wx.Panel):
 
         self.SetSizer(main_sizer)
 
+    def add_mp3s(self, path):
+        id3 = eyed3.load(path)
+        mp3_obj = Mp3(id3)
+        self.mp3s.append(mp3_obj)
+
     def edit_mp3(self, event):
         selection = self.mp3_olv.GetSelectedObject()
         if selection:
@@ -104,9 +108,7 @@ class TaggerPanel(wx.Panel):
     def find_mp3s(self, folder):
         mp3_paths = glob.glob(folder + '/*.mp3')
         for mp3_path in mp3_paths:
-            id3 = eyed3.load(mp3_path)
-            mp3_obj = Mp3(id3)
-            self.mp3s.append(mp3_obj)
+            self.add_mp3s(mp3_path)
 
     def load_mp3s(self, path):
         if self.mp3s:
@@ -117,13 +119,11 @@ class TaggerPanel(wx.Panel):
 
     def update_on_drop(self, paths):
         for path in paths:
-            ext = os.path.splitext(path)[1]
+            _, ext = os.path.splitext(path)
             if os.path.isdir(path):
                 self.load_mp3s(path)
             elif os.path.isfile(path) and ext.lower() == '.mp3':
-                id3 = eyed3.load(path)
-                mp3_obj = Mp3(id3)
-                self.mp3s.append(mp3_obj)
+                self.add_mp3s(path)
                 self.update_mp3_info()
 
     def update_mp3_info(self):

@@ -35,15 +35,14 @@ class Mp3:
                     id3.tag.release_date = 2019
                     self.year = self.normalize_mp3(
                         id3.tag.best_release_date.year)
-            self.id3 = id3
         else:
             tag = id3.initTag()
             tag.release_date = 2019
             tag.artist = 'Unknown'
             tag.album = 'Unknown'
             tag.title = 'Unknown'
-            self.id3 = id3
-            self.update()
+        self.id3 = id3
+        self.update()
 
     def normalize_mp3(self, tag):
         try:
