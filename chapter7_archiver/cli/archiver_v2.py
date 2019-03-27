@@ -17,13 +17,13 @@ def get_args():
             archiver.py --tar input_path -o output_path
         ''')
     )
-    parser.add_argument('-t', '--tar', 
+    parser.add_argument('-t', '--tar',
                         help='Create a tar file from the input path',
                         required=True, action='store', nargs='+',
                         dest='input_path')
     parser.add_argument('-o', '--output',
-                        help='Output path', 
-                        action='store', 
+                        help='Output path',
+                        action='store',
                         required=True,
                         dest='output')
     return parser.parse_args()
@@ -41,11 +41,8 @@ def main():
     if args.output:
         output = pathlib.Path(args.output)
         input_paths = get_paths(args.input_path)
-    else:
-        output = pathlib.Path(f'{temp}.tar')
-        input_paths = get_paths(args.input_path)
-    controller.create_tar(output, archive_objects=input_paths)
-    print(f'Created tarball from {input_path} to {output}')
-    
+        controller.create_tar(output, archive_objects=input_paths)
+        print(f'Created tarball from {input_path} to {output}')
+
 if __name__ == '__main__':
     main()

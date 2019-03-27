@@ -83,6 +83,11 @@ class ArchivePanel(wx.Panel):
                               'Error', wx.ICON_ERROR)
             return
 
+        if not self.archive_filename.GetValue():
+            self.show_message('File name is required!',
+                              'Error', wx.ICON_ERROR)
+            return
+
         with wx.DirDialog(
             self, "Choose a directory:",
             style=wx.DD_DEFAULT_STYLE,
@@ -92,7 +97,7 @@ class ArchivePanel(wx.Panel):
                 path = dlg.GetPath()
                 self.current_directory = path
                 archive_type = self.archive_types.GetValue()
-    
+
                 full_save_path = pathlib.Path(
                     path, '{filename}.{type}'.format(
                         filename=archive_filename,
@@ -164,7 +169,7 @@ class MainFrame(wx.Frame):
         self.panel = ArchivePanel(self)
         self.create_menu()
         self.create_toolbar()
-        
+
         self.statusbar = self.CreateStatusBar()
         self.statusbar.SetStatusText('Welcome to PyArchiver!')
 
@@ -180,7 +185,7 @@ class MainFrame(wx.Frame):
             wx.ID_ANY, "Exit",
             "Exit the application")
         menu_bar.Append(file_menu, '&File')
-        self.Bind(wx.EVT_MENU, self.on_exit, 
+        self.Bind(wx.EVT_MENU, self.on_exit,
                   exit_menu_item)
 
         # Create edit menu
@@ -201,15 +206,15 @@ class MainFrame(wx.Frame):
         remove_menu_item = edit_menu.Append(
             wx.ID_ANY, 'Remove File/Folder',
             'Remove a file or folder')
-        self.Bind(wx.EVT_MENU, self.on_remove, 
+        self.Bind(wx.EVT_MENU, self.on_remove,
                   remove_menu_item)
         menu_bar.Append(edit_menu, 'Edit')
 
         self.SetMenuBar(menu_bar)
-        
+
     def create_toolbar(self):
         self.toolbar = self.CreateToolBar()
-        
+
         add_ico = wx.ArtProvider.GetBitmap(
             wx.ART_PLUS, wx.ART_TOOLBAR, (16, 16))
         add_file_tool = self.toolbar.AddTool(
@@ -217,7 +222,7 @@ class MainFrame(wx.Frame):
             'Add a file to be archived')
         self.Bind(wx.EVT_MENU, self.on_add_file,
                   add_file_tool)
-        
+
         add_folder_ico = wx.ArtProvider.GetBitmap(
             wx.ART_FOLDER_OPEN, wx.ART_TOOLBAR, (16, 16))
         add_folder_tool = self.toolbar.AddTool(
@@ -225,14 +230,14 @@ class MainFrame(wx.Frame):
             'Add a folder to be archived')
         self.Bind(wx.EVT_MENU, self.on_add_folder,
                   add_folder_tool)
-        
+
         remove_ico = wx.ArtProvider.GetBitmap(
             wx.ART_MINUS, wx.ART_TOOLBAR, (16, 16))
         remove_tool = self.toolbar.AddTool(
             wx.ID_ANY, 'Remove', remove_ico,
             'Remove selected item')
         self.Bind(wx.EVT_MENU, self.on_remove, remove_tool)
-        
+
         self.toolbar.Realize()
 
     def on_add_file(self, event):

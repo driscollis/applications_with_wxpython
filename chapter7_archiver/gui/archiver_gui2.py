@@ -53,7 +53,7 @@ class ArchivePanel(wx.Panel):
         # Create iinput widget
         self.archive_olv = ObjectListView(
             self, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
-        self.archive_olv.SetEmptyListMsg("Add Files / Folders here")        
+        self.archive_olv.SetEmptyListMsg("Add Files / Folders here")
         self.update_archive()
         main_sizer.Add(self.archive_olv, 1, wx.ALL|wx.EXPAND, 5)
 
@@ -83,6 +83,11 @@ class ArchivePanel(wx.Panel):
                               'Error', wx.ICON_ERROR)
             return
 
+        if not self.archive_filename.GetValue():
+            self.show_message('File name is required!',
+                              'Error', wx.ICON_ERROR)
+            return
+
         with wx.DirDialog(
             self, "Choose a directory:",
             style=wx.DD_DEFAULT_STYLE,
@@ -92,7 +97,7 @@ class ArchivePanel(wx.Panel):
                 path = dlg.GetPath()
                 self.current_directory = path
                 archive_type = self.archive_types.GetValue()
-    
+
                 full_save_path = pathlib.Path(
                     path, '{filename}.{type}'.format(
                         filename=archive_filename,
@@ -176,7 +181,7 @@ class MainFrame(wx.Frame):
             wx.ID_ANY, "Exit",
             "Exit the application")
         menu_bar.Append(file_menu, '&File')
-        self.Bind(wx.EVT_MENU, self.on_exit, 
+        self.Bind(wx.EVT_MENU, self.on_exit,
                   exit_menu_item)
 
         # Create edit menu
@@ -197,7 +202,7 @@ class MainFrame(wx.Frame):
         remove_menu_item = edit_menu.Append(
             wx.ID_ANY, 'Remove File/Folder',
             'Remove a file or folder')
-        self.Bind(wx.EVT_MENU, self.on_remove, 
+        self.Bind(wx.EVT_MENU, self.on_remove,
                   remove_menu_item)
         menu_bar.Append(edit_menu, 'Edit')
 

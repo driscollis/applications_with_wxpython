@@ -33,7 +33,6 @@ class DropTarget(wx.FileDropTarget):
 
 class ArchivePanel(wx.Panel):
 
-
     def __init__(self, parent):
         super().__init__(parent)
         font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.NORMAL)
@@ -51,7 +50,7 @@ class ArchivePanel(wx.Panel):
         self.archive_olv = ObjectListView(
             self, style=wx.LC_REPORT|wx.SUNKEN_BORDER)
         self.archive_olv.SetEmptyListMsg("Add Files / Folders here")
-        
+
         self.update_archive()
         main_sizer.Add(self.archive_olv, 1, wx.ALL|wx.EXPAND, 5)
         # Create output related widgets
@@ -80,6 +79,11 @@ class ArchivePanel(wx.Panel):
                               'Error', wx.ICON_ERROR)
             return
 
+        if not self.archive_filename.GetValue():
+            self.show_message('File name is required!',
+                              'Error', wx.ICON_ERROR)
+            return
+
         with wx.DirDialog(
             self, "Choose a directory:",
             style=wx.DD_DEFAULT_STYLE,
@@ -89,7 +93,7 @@ class ArchivePanel(wx.Panel):
                 self.current_directory = path
                 archive_filename = self.archive_filename.GetValue()
                 archive_type = self.archive_types.GetValue()
-    
+
                 full_save_path = pathlib.Path(
                     path, '{filename}.{type}'.format(
                         filename=archive_filename,
