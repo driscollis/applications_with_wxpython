@@ -93,7 +93,7 @@ class TaggerPanel(wx.Panel):
 
         self.SetSizer(main_sizer)
 
-    def add_mp3s(self, path):
+    def add_mp3(self, path):
         id3 = eyed3.load(path)
         mp3_obj = Mp3(id3)
         self.mp3s.append(mp3_obj)
@@ -108,7 +108,7 @@ class TaggerPanel(wx.Panel):
     def find_mp3s(self, folder):
         mp3_paths = glob.glob(folder + '/*.mp3')
         for mp3_path in mp3_paths:
-            self.add_mp3s(mp3_path)
+            self.add_mp3(mp3_path)
 
     def load_mp3s(self, path):
         if self.mp3s:
@@ -123,7 +123,7 @@ class TaggerPanel(wx.Panel):
             if os.path.isdir(path):
                 self.load_mp3s(path)
             elif os.path.isfile(path) and ext.lower() == '.mp3':
-                self.add_mp3s(path)
+                self.add_mp3(path)
                 self.update_mp3_info()
 
     def update_mp3_info(self):
