@@ -39,16 +39,23 @@ class DownloadDialog(wx.Dialog):
 
     def on_save(self, event):
         selection = self.list_box.GetSelection()
-        with wx.FileDialog(
-            self, message="Save file as ...",
-            defaultDir=self.paths.GetDocumentsDir(),
-            defaultFile=self.list_box.GetString(selection),
-            wildcard=wildcard,
-            style=wx.FD_SAVE
-            ) as dlg:
-            if dlg.ShowModal() == wx.ID_OK:
-                path = dlg.GetPath()
-                self.save(path)
+        if selection != -1:
+            with wx.FileDialog(
+                self, message="Save file as ...",
+                defaultDir=self.paths.GetDocumentsDir(),
+                defaultFile=self.list_box.GetString(selection),
+                wildcard=wildcard,
+                style=wx.FD_SAVE
+                ) as dlg:
+                if dlg.ShowModal() == wx.ID_OK:
+                    path = dlg.GetPath()
+                    self.save(path)
+        else:
+            message = 'No image selected'
+            with wx.MessageDialog(None, message=message,
+                              caption='Cannot Save',
+                              style=wx.ICON_ERROR) as dlg:
+                dlg.ShowModal()
 
     def save(self, path):
         selection = self.list_box.GetSelection()
