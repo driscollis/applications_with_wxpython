@@ -26,7 +26,6 @@ class DownloadDialog(wx.Dialog):
         main_sizer.Add(save_btn, 0, wx.ALL|wx.CENTER, 5)
         self.SetSizer(main_sizer)
 
-
     def get_image_urls(self, item):
         asset_url = f'https://images-api.nasa.gov/asset/{item.nasa_id}'
         image_request = requests.get(asset_url)
