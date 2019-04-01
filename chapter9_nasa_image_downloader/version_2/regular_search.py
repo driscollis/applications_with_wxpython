@@ -76,6 +76,11 @@ class SearchResults(wx.Panel):
         self.title.SetValue(f'{selection.title}')
         if selection.thumbnail:
             self.update_image(selection.thumbnail)
+        else:
+            img = wx.Image(240, 240)
+            self.image_ctrl.SetBitmap(wx.Bitmap(img))
+            self.Refresh()
+            self.Layout()
 
     def update_image(self, url):
         filename = url.split('/')[-1]
@@ -102,6 +107,11 @@ class SearchResults(wx.Panel):
         self.Refresh()
         self.Layout()
 
+    def reset_image(self):
+        img = wx.Image(240, 240)
+        self.image_ctrl.SetBitmap(wx.Bitmap(img))
+        self.Refresh()
+
     def update_search_results(self):
         self.search_results_olv.SetColumns([
             ColumnDefn("Title", "left", 250, "title"),
@@ -125,3 +135,4 @@ class SearchResults(wx.Panel):
                 result = Result(item)
                 self.search_results.append(result)
         self.update_search_results()
+        self.reset_image()

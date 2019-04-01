@@ -17,8 +17,7 @@ class DownloadDialog(wx.Dialog):
         if urls:
             choices = {url.split('/')[-1]: url for url in urls if 'jpg' in url}
             for choice in choices:
-                if 'jpg' in choice:
-                    self.list_box.Append(choice, choices[choice])
+                self.list_box.Append(choice, choices[choice])
         main_sizer.Add(self.list_box, 1, wx.EXPAND|wx.ALL, 5)
 
         save_btn = wx.Button(self, label='Save')

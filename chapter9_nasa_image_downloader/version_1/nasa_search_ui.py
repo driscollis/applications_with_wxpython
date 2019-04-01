@@ -82,26 +82,32 @@ class MainPanel(wx.Panel):
 
     def on_search(self, event):
         search_term = event.GetString()
-        query = {'q': search_term, 'media_type': 'image'}
-        full_url = base_url + '?' + urlencode(query, quote_via=quote_plus)
-        r = requests.get(full_url)
-        data = r.json()
-        self.search_results = []
-        for item in data['collection']['items']:
-            if item.get('data') and len(item.get('data')) > 0:
-                data = item['data'][0]
-                if data['title'].strip() == '':
-                    # Skip results with blank titles
-                    continue
-                result = Result(item)
-                self.search_results.append(result)
-        self.update_search_results()
+        if search_term:
+            query = {'q': search_term, 'media_type': 'image'}
+            full_url = base_url + '?' + urlencode(query, quote_via=quote_plus)
+            r = requests.get(full_url)
+            data = r.json()
+            self.search_results = []
+            for item in data['collection']['items']:
+                if item.get('data') and len(item.get('data')) > 0:
+                    data = item['data'][0]
+                    if data['title'].strip() == '':
+                        # Skip results with blank titles
+                        continue
+                    result = Result(item)
+                    self.search_results.append(result)
+            self.update_search_results()
 
     def on_selection(self, event):
         selection = self.search_results_olv.GetSelectedObject()
         self.title.SetValue(f'{selection.title}')
         if selection.thumbnail:
             self.update_image(selection.thumbnail)
+        else:
+            img = wx.Image(240, 240)
+            self.image_ctrl.SetBitmap(wx.Bitmap(img))
+            self.Refresh()
+            self.Layout()
 
 
     def update_image(self, url):

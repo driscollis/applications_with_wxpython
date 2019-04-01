@@ -1,5 +1,6 @@
 # download_dialog.py
 
+import os
 import requests
 import wx
 
@@ -17,15 +18,13 @@ class DownloadDialog(wx.Dialog):
         if urls:
             choices = {url.split('/')[-1]: url for url in urls if 'jpg' in url}
             for choice in choices:
-                if 'jpg' in choice:
-                    self.list_box.Append(choice, choices[choice])
+                self.list_box.Append(choice, choices[choice])
         main_sizer.Add(self.list_box, 1, wx.EXPAND|wx.ALL, 5)
 
         save_btn = wx.Button(self, label='Save')
         save_btn.Bind(wx.EVT_BUTTON, self.on_save)
         main_sizer.Add(save_btn, 0, wx.ALL|wx.CENTER, 5)
         self.SetSizer(main_sizer)
-
 
     def get_image_urls(self, item):
         asset_url = f'https://images-api.nasa.gov/asset/{item.nasa_id}'
@@ -58,6 +57,10 @@ class DownloadDialog(wx.Dialog):
                 dlg.ShowModal()
 
     def save(self, path):
+        _, ext = os.path.splitext(path)
+        if ext.lower() != '.jpg':
+            path = f'{path}.jpg'
+
         selection = self.list_box.GetSelection()
         r = requests.get(
             self.list_box.GetClientData(selection))
