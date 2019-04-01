@@ -31,7 +31,7 @@ class Result:
                 self.thumbnail = ''
 
 
-class SearchResults(wx.Panel):
+class RegularSearch(wx.Panel):
 
     def __init__(self, parent):
         super().__init__(parent)

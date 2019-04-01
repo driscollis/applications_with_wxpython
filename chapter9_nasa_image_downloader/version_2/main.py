@@ -3,7 +3,7 @@
 import wx
 
 from advanced_search import AdvancedSearch
-from regular_search import SearchResults
+from regular_search import RegularSearch
 from pubsub import pub
 
 
@@ -31,7 +31,7 @@ class MainPanel(wx.Panel):
         search_sizer.Add(self.advanced_search_btn, 0, wx.ALL, 5)
         self.main_sizer.Add(search_sizer, 0, wx.EXPAND)
 
-        self.search_panel = SearchResults(self)
+        self.search_panel = RegularSearch(self)
         self.advanced_search_panel = AdvancedSearch(self)
         self.advanced_search_panel.Hide()
         self.main_sizer.Add(self.search_panel, 1, wx.EXPAND)
@@ -42,8 +42,9 @@ class MainPanel(wx.Panel):
     def on_search(self, event):
         search_results = []
         search_term = event.GetString()
-        query = {'q': search_term, 'media_type': 'image'}
-        pub.sendMessage('search_results', query=query)
+        if search_term:
+            query = {'q': search_term, 'media_type': 'image'}
+            pub.sendMessage('search_results', query=query)
 
     def on_advanced_search(self, event):
         self.search.Hide()
