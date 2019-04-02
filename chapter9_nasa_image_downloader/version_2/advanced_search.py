@@ -35,7 +35,7 @@ class AdvancedSearch(wx.Panel):
         self.ui_helper('Title:', self.title)
         search = wx.Button(self, label='Search')
         search.Bind(wx.EVT_BUTTON, self.on_search)
-        self.main_sizer.Add(search, 0, wx.ALL|wx.CENTER, 5)
+        self.main_sizer.Add(search, 0, wx.ALL | wx.CENTER, 5)
 
         self.SetSizer(self.main_sizer)
 
@@ -43,7 +43,7 @@ class AdvancedSearch(wx.Panel):
         sizer = wx.BoxSizer()
         lbl = wx.StaticText(self, label=label, size=(150, -1))
         sizer.Add(lbl, 0, wx.ALL, 5)
-        sizer.Add(textctrl, 1, wx.ALL|wx.EXPAND, 5)
+        sizer.Add(textctrl, 1, wx.ALL | wx.EXPAND, 5)
         self.main_sizer.Add(sizer, 0, wx.EXPAND)
 
     def on_search(self, event):
