@@ -40,20 +40,35 @@ class MergePanel(wx.Panel):
     def __init__(self, parent):
         super().__init__(parent)
         self.pdfs = []
-        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        self.main_sizer = wx.BoxSizer(wx.VERTICAL)
         pub.subscribe(self.add_pdf_from_menu, 'pdf_path')
+        self.create_ui()
+
+    def create_ui(self):
+        move_btn_sizer = wx.BoxSizer(wx.VERTICAL)
+        row_sizer = wx.BoxSizer()
 
         self.pdf_olv = ObjectListView(
             self, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.pdf_olv.SetEmptyListMsg("No PDFs Loaded")
         self.update_pdfs()
-        main_sizer.Add(self.pdf_olv, 1, wx.ALL | wx.EXPAND, 5)
+        row_sizer.Add(self.pdf_olv, 1, wx.ALL | wx.EXPAND)
+
+        move_up_btn = wx.Button(self, label='Up')
+        move_up_btn.Bind(wx.EVT_BUTTON, self.on_move)
+        move_btn_sizer.Add(move_up_btn, 0, wx.ALL, 5)
+        move_down_btn = wx.Button(self, label='Down')
+        move_down_btn.Bind(wx.EVT_BUTTON, self.on_move)
+        move_btn_sizer.Add(move_down_btn, 0, wx.ALL, 5)
+        row_sizer.Add(move_btn_sizer)
+
+        self.main_sizer.Add(row_sizer, 1, wx.ALL | wx.EXPAND, 5)
 
         merge_pdfs = wx.Button(self, label='Merge PDFs')
         merge_pdfs.Bind(wx.EVT_BUTTON, self.on_merge)
-        main_sizer.Add(merge_pdfs, 0, wx.ALL | wx.CENTER, 5)
+        self.main_sizer.Add(merge_pdfs, 0, wx.ALL | wx.CENTER, 5)
 
-        self.SetSizer(main_sizer)
+        self.SetSizer(self.main_sizer)
 
     def add_pdf(self, path):
         self.pdfs.append(Pdf(path))
@@ -104,6 +119,33 @@ class MergePanel(wx.Panel):
 
         with open(output_path, 'wb') as fh:
             pdf_writer.write(fh)
+
+    def on_move(self, event):
+        btn = event.GetEventObject()
+        label = btn.GetLabel()
+        current_selection = self.pdf_olv.GetSelectedObject()
+        data = self.pdf_olv.GetObjects()
+        if current_selection:
+            index = data.index(current_selection)
+            new_index = self.get_new_index(
+                label.lower(), index, data)
+            data.insert(new_index, data.pop(index))
+            self.pdfs = data
+            self.update_pdfs()
+            self.pdf_olv.Select(new_index)
+
+    def get_new_index(self, direction, index, data):
+        if direction == 'up':
+            if index > 0:
+                new_index = index - 1
+            else:
+                new_index = len(data)-1
+        else:
+            if index < len(data) - 1:
+                new_index = index + 1
+            else:
+                new_index = 0
+        return new_index
 
     def update_on_drop(self, paths):
         for path in paths:
