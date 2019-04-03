@@ -36,6 +36,7 @@ class MergeThread(Thread):
             with open(self.output_path, 'wb') as fh:
                 pdf_writer.write(fh)
             break
+        wx.CallAfter(pub.sendMessage, 'close')
 
 
 class MergeGauge(wx.Gauge):
@@ -53,6 +54,8 @@ class MergeProgressDialog(wx.Dialog):
 
     def __init__(self, objects, path):
         super().__init__(None, title='Merging Progress')
+        pub.subscribe(self.close, "close")
+
         sizer = wx.BoxSizer(wx.VERTICAL)
         total_page_count = sum([int(obj.number_of_pages)
                                 for obj in objects])
@@ -61,6 +64,9 @@ class MergeProgressDialog(wx.Dialog):
 
         MergeThread(objects, output_path=path)
         self.SetSizer(sizer)
+
+    def close(self):
+        self.Close()
 
 
 class DropTarget(wx.FileDropTarget):
@@ -94,10 +100,18 @@ class MergePanel(wx.Panel):
         super().__init__(parent)
         self.pdfs = []
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
-        pub.subscribe(self.add_pdf_from_menu, 'pdf_path')
         self.create_ui()
 
     def create_ui(self):
+        btn_sizer = wx.BoxSizer()
+        add_btn = wx.Button(self, label='Add')
+        add_btn.Bind(wx.EVT_BUTTON, self.on_add_file)
+        btn_sizer.Add(add_btn, 0, wx.ALL, 5)
+        remove_btn = wx.Button(self, label='Remove')
+        remove_btn.Bind(wx.EVT_BUTTON, self.on_remove)
+        btn_sizer.Add(remove_btn, 0, wx.ALL, 5)
+        self.main_sizer.Add(btn_sizer)
+
         move_btn_sizer = wx.BoxSizer(wx.VERTICAL)
         row_sizer = wx.BoxSizer()
 
@@ -125,11 +139,6 @@ class MergePanel(wx.Panel):
 
     def add_pdf(self, path):
         self.pdfs.append(Pdf(path))
-
-    def add_pdf_from_menu(self, paths):
-        for path in paths:
-            self.add_pdf(path)
-        self.update_pdfs()
 
     def load_pdfs(self, path):
         pdf_paths = glob.glob(path + '/*.pdf')
@@ -161,6 +170,27 @@ class MergePanel(wx.Panel):
         with MergeProgressDialog(objects, output_path) as dlg:
             dlg.ShowModal()
 
+        with wx.MessageDialog(None, message='Save completed!',
+                              caption='Save Finished',
+                             style= wx.ICON_INFORMATION) as dlg:
+            dlg.ShowModal()
+
+    def on_add_file(self, event):
+        paths = None
+        with wx.FileDialog(
+            self, message="Choose a file",
+            defaultDir='~',
+            defaultFile="",
+            wildcard=wildcard,
+            style=wx.FD_OPEN | wx.FD_MULTIPLE
+            ) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                paths = dlg.GetPaths()
+        if paths:
+            for path in paths:
+                self.add_pdf(path)
+            self.update_pdfs()
+
     def on_move(self, event):
         btn = event.GetEventObject()
         label = btn.GetLabel()
@@ -174,6 +204,11 @@ class MergePanel(wx.Panel):
             self.pdfs = data
             self.update_pdfs()
             self.pdf_olv.Select(new_index)
+
+    def on_remove(self, event):
+        current_selection = self.pdf_olv.GetSelectedObject()
+        if current_selection:
+            self.pdf_olv.RemoveObject(current_selection)
 
     def get_new_index(self, direction, index, data):
         if direction == 'up':
