@@ -6,8 +6,61 @@ import wx
 from ObjectListView import ObjectListView, ColumnDefn
 from pubsub import pub
 from PyPDF2 import PdfFileReader, PdfFileWriter
+from threading import Thread
 
 wildcard = "PDFs (*.pdf)|*.pdf"
+
+
+class MergeThread(Thread):
+
+    def __init__(self, objects, output_path):
+        super().__init__()
+        self.objects = objects
+        self.output_path = output_path
+        self.running = True
+        self.start()
+
+    def run(self):
+        pdf_writer = PdfFileWriter()
+        page_count = 1
+        while self.running:
+            for obj in self.objects:
+                pdf_reader = PdfFileReader(obj.full_path)
+                for page in range(pdf_reader.getNumPages()):
+                    pdf_writer.addPage(pdf_reader.getPage(page))
+                    wx.CallAfter(pub.sendMessage, 'update',
+                                 msg=page_count)
+                    page_count += 1
+
+            # All pages are added, so write it to disk
+            with open(self.output_path, 'wb') as fh:
+                pdf_writer.write(fh)
+            break
+
+
+class MergeGauge(wx.Gauge):
+
+    def __init__(self, parent, range):
+        super().__init__(parent, range=range)
+
+        pub.subscribe(self.update_progress, "update")
+
+    def update_progress(self, msg):
+        self.SetValue(msg)
+
+
+class MergeProgressDialog(wx.Dialog):
+
+    def __init__(self, objects, path):
+        super().__init__(None, title='Merging Progress')
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        total_page_count = sum([int(obj.number_of_pages)
+                                for obj in objects])
+        gauge = MergeGauge(self, total_page_count)
+        sizer.Add(gauge, 0, wx.ALL | wx.EXPAND, 5)
+
+        MergeThread(objects, output_path=path)
+        self.SetSizer(sizer)
 
 
 class DropTarget(wx.FileDropTarget):
@@ -85,9 +138,6 @@ class MergePanel(wx.Panel):
         self.update_pdfs()
 
     def on_merge(self, event):
-        """
-        TODO - Move this into a thread
-        """
         objects = self.pdf_olv.GetObjects()
         if len(objects) < 2:
             print('Need more than one PDF to merge!')
@@ -105,23 +155,10 @@ class MergePanel(wx.Panel):
             _, ext = os.path.splitext(path)
             if '.pdf' not in ext.lower():
                 path = f'{path}.pdf'
-            self.merge(path)
+            self.merge(path, objects)
 
-    def merge(self, output_path):
-        pdf_writer = PdfFileWriter()
-
-        objects = self.pdf_olv.GetObjects()
-
-        for obj in objects:
-            pdf_reader = PdfFileReader(obj.full_path)
-            for page in range(pdf_reader.getNumPages()):
-                pdf_writer.addPage(pdf_reader.getPage(page))
-
-        with open(output_path, 'wb') as fh:
-            pdf_writer.write(fh)
-
-        with wx.MessageDialog(None, 'Save completed!', 'Save Finished',
-                              wx.ID_INFO) as dlg:
+    def merge(self, output_path, objects):
+        with MergeProgressDialog(objects, output_path) as dlg:
             dlg.ShowModal()
 
     def on_move(self, event):
