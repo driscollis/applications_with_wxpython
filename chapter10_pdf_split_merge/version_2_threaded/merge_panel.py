@@ -57,6 +57,8 @@ class MergeProgressDialog(wx.Dialog):
         pub.subscribe(self.close, "close")
 
         sizer = wx.BoxSizer(wx.VERTICAL)
+        lbl = wx.StaticText(self, label='Merging PDFS')
+        sizer.Add(lbl, 0, wx.ALL | wx.CENTER, 5)
         total_page_count = sum([int(obj.number_of_pages)
                                 for obj in objects])
         gauge = MergeGauge(self, total_page_count)
