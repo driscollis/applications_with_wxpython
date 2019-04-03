@@ -4,7 +4,6 @@ import os
 import wx
 
 from ObjectListView import ObjectListView, ColumnDefn
-from pubsub import pub
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
 wildcard = "PDFs (*.pdf)|*.pdf"
@@ -69,7 +68,6 @@ class MergePanel(wx.Panel):
         move_down_btn.Bind(wx.EVT_BUTTON, self.on_move)
         move_btn_sizer.Add(move_down_btn, 0, wx.ALL, 5)
         row_sizer.Add(move_btn_sizer)
-
         self.main_sizer.Add(row_sizer, 1, wx.ALL | wx.EXPAND, 5)
 
         merge_pdfs = wx.Button(self, label='Merge PDFs')
@@ -181,7 +179,7 @@ class MergePanel(wx.Panel):
             _, ext = os.path.splitext(path)
             if os.path.isdir(path):
                 self.load_pdfs(path)
-            elif os.path.isfile(path) and ext.lower() == '.mp3':
+            elif os.path.isfile(path) and ext.lower() == '.pdf':
                 self.add_pdf(path)
                 self.update_pdfs()
 

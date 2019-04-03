@@ -1,13 +1,9 @@
 # main.py
 
-import os
 import wx
 
 from merge_panel import MergePanel
-from pubsub import pub
 from split_panel import SplitPanel
-
-wildcard = "PDFs (*.pdf)|*.pdf"
 
 
 class MainPanel(wx.Panel):
