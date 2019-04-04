@@ -101,6 +101,8 @@ class MergePanel(wx.Panel):
     def __init__(self, parent):
         super().__init__(parent)
         self.pdfs = []
+        drop_target = DropTarget(self)
+        self.SetDropTarget(drop_target)
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
         self.create_ui()
 
