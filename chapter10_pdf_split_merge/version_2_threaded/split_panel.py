@@ -1,3 +1,5 @@
+# split_panel.py
+
 import os
 import string
 import wx
@@ -72,12 +74,12 @@ class SplitPanel(wx.Panel):
         msg = 'Type page numbers and/or page ranges separated by commas.' \
             ' For example: 1, 3 or 4-10. Note you cannot use both commas ' \
             'and dashes.'
-        self.directions_lbl = wx.TextCtrl(
+        directions_txt = wx.TextCtrl(
             self, value=msg,
             style=wx.TE_MULTILINE | wx.NO_BORDER)
-        self.directions_lbl.SetFont(font)
-        self.directions_lbl.Disable()
-        main_sizer.Add(self.directions_lbl, 0, wx.ALL | wx.EXPAND, 5)
+        directions_txt.SetFont(font)
+        directions_txt.Disable()
+        main_sizer.Add(directions_txt, 0, wx.ALL | wx.EXPAND, 5)
 
         split_btn = wx.Button(self, label='Split PDF')
         split_btn.Bind(wx.EVT_BUTTON, self.on_split)
@@ -103,29 +105,40 @@ class SplitPanel(wx.Panel):
         input_pdf = self.pdf_path.GetValue()
         split_options = self.pdf_split_options.GetValue()
         if not input_pdf:
-            with wx.MessageDialog(
-                None, message='You must choose an input PDF!',
-                caption='Error',
-                style= wx.ICON_ERROR) as dlg:
-                dlg.ShowModal()
+            message='You must choose an input PDF!'
+            self.show_message(message)
             return
 
         if not os.path.exists(input_pdf):
             message = f'Input PDF {input_pdf} does not exist!'
-            with wx.MessageDialog(
-                None, message=message,
-                caption='Error',
-                style= wx.ICON_ERROR) as dlg:
-                dlg.ShowModal()
+            self.show_message(message)
+            return
+
+        if not split_options:
+            message = 'You need to choose what page(s) to split off'
+            self.show_message(message)
             return
 
         if ',' in split_options and '-' in split_options:
             message = 'You cannot have both commas and dashes in options'
-            with wx.MessageDialog(
-                None, message=message,
-                caption='Error',
-                style= wx.ICON_ERROR) as dlg:
-                dlg.ShowModal()
+            self.show_message(message)
+            return
+
+        if split_options.count('-') > 1:
+            message = 'You can only use one dash'
+            self.show_message(message)
+            return
+
+        if '-' in split_options:
+            page_begin, page_end = split_options.split('-')
+            if not page_begin or not page_end:
+                message = 'Need both a beginning and ending page'
+                self.show_message(message)
+                return
+
+        if not any(char.isdigit() for char in split_options):
+            message = 'You need to enter a page number to split off'
+            self.show_message(message)
             return
 
         with wx.FileDialog(
@@ -149,7 +162,8 @@ class SplitPanel(wx.Panel):
         pdf = PdfFileReader(input_pdf)
         pdf_writer = PdfFileWriter()
         if ',' in split_options:
-            pages = split_options.split(',')
+            pages = [page for page in split_options.split(',')
+                     if page]
             for page in pages:
                 pdf_writer.addPage(pdf.getPage(int(page)))
         else:
@@ -171,10 +185,11 @@ class SplitPanel(wx.Panel):
 
         # Let user know that PDF is split
         message = f'PDF split successfully to {output_path}'
+        self.show_message(message, caption='Split Finished',
+                          style=wx.ICON_INFORMATION)
+
+    def show_message(self, message, caption='Error', style=wx.ICON_ERROR):
         with wx.MessageDialog(None, message=message,
-                              caption='Split Finished',
-                              style= wx.ICON_INFORMATION) as dlg:
+                              caption=caption,
+                              style=style) as dlg:
             dlg.ShowModal()
-
-
-
