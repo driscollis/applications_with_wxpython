@@ -1,6 +1,7 @@
 # merge_panel.py
 
 import os
+import glob
 import wx
 
 from ObjectListView import ObjectListView, ColumnDefn
@@ -17,25 +18,24 @@ class MergeThread(Thread):
         super().__init__()
         self.objects = objects
         self.output_path = output_path
-        self.running = True
         self.start()
 
     def run(self):
         pdf_writer = PdfFileWriter()
         page_count = 1
-        while self.running:
-            for obj in self.objects:
-                pdf_reader = PdfFileReader(obj.full_path)
-                for page in range(pdf_reader.getNumPages()):
-                    pdf_writer.addPage(pdf_reader.getPage(page))
-                    wx.CallAfter(pub.sendMessage, 'update',
-                                 msg=page_count)
-                    page_count += 1
 
-            # All pages are added, so write it to disk
-            with open(self.output_path, 'wb') as fh:
-                pdf_writer.write(fh)
-            break
+        for obj in self.objects:
+            pdf_reader = PdfFileReader(obj.full_path)
+            for page in range(pdf_reader.getNumPages()):
+                pdf_writer.addPage(pdf_reader.getPage(page))
+                wx.CallAfter(pub.sendMessage, 'update',
+                             msg=page_count)
+                page_count += 1
+
+        # All pages are added, so write it to disk
+        with open(self.output_path, 'wb') as fh:
+            pdf_writer.write(fh)
+
         wx.CallAfter(pub.sendMessage, 'close')
 
 
@@ -153,7 +153,12 @@ class MergePanel(wx.Panel):
     def on_merge(self, event):
         objects = self.pdf_olv.GetObjects()
         if len(objects) < 2:
-            print('Need more than one PDF to merge!')
+            with wx.MessageDialog(
+                None,
+                message='You need 2 or more files to merge!',
+                caption='Error',
+                style= wx.ICON_INFORMATION) as dlg:
+                dlg.ShowModal()
             return
         with wx.FileDialog(
             self, message="Choose a file",

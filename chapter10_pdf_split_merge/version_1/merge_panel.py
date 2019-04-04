@@ -1,6 +1,7 @@
 # merge_panel.py
 
 import os
+import glob
 import wx
 
 from ObjectListView import ObjectListView, ColumnDefn
@@ -93,7 +94,12 @@ class MergePanel(wx.Panel):
         """
         objects = self.pdf_olv.GetObjects()
         if len(objects) < 2:
-            print('Need more than one PDF to merge!')
+            with wx.MessageDialog(
+                None,
+                message='You need 2 or more files to merge!',
+                caption='Error',
+                style= wx.ICON_INFORMATION) as dlg:
+                dlg.ShowModal()
             return
         with wx.FileDialog(
             self, message="Choose a file",
