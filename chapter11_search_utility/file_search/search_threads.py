@@ -1,4 +1,5 @@
 import os
+import time
 import wx
 
 from pubsub import pub
@@ -16,6 +17,7 @@ class SearchFolderThread(Thread):
         self.start()
 
     def run(self):
+        start = time.time()
         for entry in os.scandir(self.folder):
             if entry.is_file():
                 if self.case_sensitive:
@@ -33,6 +35,8 @@ class SearchFolderThread(Thread):
                         data = (entry.path, entry.stat().st_mtime)
                         wx.CallAfter(pub.sendMessage,
                                      'update', result=data)
+        end = time.time()
+        wx.CallAfter(pub.sendMessage, 'status', search_time=end-start)
 
 
 class SearchSubdirectoriesThread(Thread):
@@ -46,13 +50,14 @@ class SearchSubdirectoriesThread(Thread):
         self.start()
 
     def run(self):
+        start = time.time()
         for root, dirs, files in os.walk(self.folder):
             for f in files:
                 full_path = os.path.join(root, f)
                 if not self.case_sensitive:
                     full_path = full_path.lower()
 
-                if self.search_term in full_path:
+                if self.search_term in full_path and os.path.exists(full_path):
                     _, ext = os.path.splitext(full_path
                                               )
                     if self.file_type and self.file_type == ext.lower():
@@ -63,3 +68,5 @@ class SearchSubdirectoriesThread(Thread):
                         data = (full_path, os.stat(full_path).st_mtime)
                         wx.CallAfter(pub.sendMessage,
                                      'update', result=data)
+        end = time.time()
+        wx.CallAfter(pub.sendMessage, 'status', search_time=end-start)
