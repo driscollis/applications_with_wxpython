@@ -1,3 +1,5 @@
+# search_threads.py
+
 import os
 import time
 import wx
