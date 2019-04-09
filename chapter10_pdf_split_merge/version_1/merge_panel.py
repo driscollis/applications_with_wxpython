@@ -167,6 +167,8 @@ class MergePanel(wx.Panel):
     def on_remove(self, event):
         current_selection = self.pdf_olv.GetSelectedObject()
         if current_selection:
+            index = self.pdfs.index(current_selection)
+            self.pdfs.pop(index)
             self.pdf_olv.RemoveObject(current_selection)
 
     def get_new_index(self, direction, index, data):
