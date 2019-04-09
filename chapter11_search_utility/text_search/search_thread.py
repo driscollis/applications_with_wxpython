@@ -26,5 +26,14 @@ class SearchThread(Thread):
         grin = config.get("Settings", "grin")
         cmd = [grin, self.search_term, self.folder]
         output = subprocess.check_output(cmd, encoding='UTF-8')
+        current_key = ''
+        results = {}
+        for line in output.split('\n'):
+            if '/home/mdriscoll/py/boomslang' in line:
+                current_key = line
+                results[line] = []
+            else:
+                results[current_key].append(line)
         end = time.time()
         wx.CallAfter(pub.sendMessage, 'status', search_time=end-start)
+
