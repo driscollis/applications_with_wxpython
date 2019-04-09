@@ -1,23 +1,22 @@
 # main.py
 
-import glob
 import os
 import sys
+import subprocess
 import time
 import wx
 
 from ObjectListView import ObjectListView, ColumnDefn
-from threading import Thread
+from pubsub import pub
+from search_threads import SearchFolderThread, SearchSubdirectoriesThread
+
 
 class SearchResult:
 
-    def __init__(self, result):
-        self.path = result.path
-        try:
-            modified_time = result.stat().st_mtime
-        except:
-            modified_time = time.gmtime()
-        self.modified = time.strftime('%D %H:%M:%S', modified_time)
+    def __init__(self, path, modified_time):
+        self.path = path
+        self.modified = time.strftime('%D %H:%M:%S',
+                                      time.gmtime(modified_time))
 
 
 class MainPanel(wx.Panel):
@@ -28,6 +27,7 @@ class MainPanel(wx.Panel):
         self.main_sizer = wx.BoxSizer(wx.VERTICAL)
         self.create_ui()
         self.SetSizer(self.main_sizer)
+        pub.subscribe(self.update_search_results, 'update')
 
     def create_ui(self):
         self.search_ctrl = wx.SearchCtrl(
@@ -66,7 +66,7 @@ class MainPanel(wx.Panel):
             self, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.search_results_olv.SetEmptyListMsg("No Results Found")
         self.main_sizer.Add(self.search_results_olv, 1, wx.ALL | wx.EXPAND, 5)
-        self.update_search_results()
+        self.update_ui()
 
         show_result_btn = wx.Button(self, label='Show Result in Browser')
         show_result_btn.Bind(wx.EVT_BUTTON, self.on_show_result)
@@ -97,8 +97,9 @@ class MainPanel(wx.Panel):
         search_term = self.search_ctrl.GetValue()
         file_type = self.file_type.GetValue()
         file_type = file_type.lower()
-        if not self.case_sensitive.GetValue():
-            search_term = search_term.lower()
+        if '.' not in file_type:
+            file_type = f'.{file_type}'
+
         if not self.sub_directories.GetValue():
             # Do not search sub-directories
             self.search_current_folder_only(search_term, file_type)
@@ -110,16 +111,30 @@ class MainPanel(wx.Panel):
         Search for the specified term in the directory and its
         sub-directories
         """
-        pass
+        folder = self.directory.GetValue()
+        if folder:
+            SearchSubdirectoriesThread(folder, search_term, file_type,
+                                       self.case_sensitive.GetValue())
 
     def search_current_folder_only(self, search_term, file_type):
         """
         Search for the specified term in the directory only. Do
         not search sub-directories
         """
-        pass
+        folder = self.directory.GetValue()
+        if folder:
+            SearchFolderThread(folder, search_term, file_type,
+                               self.case_sensitive.GetValue())
 
-    def update_search_results(self):
+    def update_search_results(self, result):
+        """
+        Called by pubsub from thread
+        """
+        path, modified_time = result
+        self.search_results.append(SearchResult(path, modified_time))
+        self.update_ui()
+
+    def update_ui(self):
         self.search_results_olv.SetColumns([
             ColumnDefn("File Path", "left", 300, "path"),
             ColumnDefn("Modified Time", "left", 150, "modified")
