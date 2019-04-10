@@ -33,7 +33,7 @@ class SearchFolderThread(Thread):
                         data = (entry.path, entry.stat().st_mtime)
                         wx.CallAfter(pub.sendMessage,
                                      'update', result=data)
-                    elif self.file_type is not None:
+                    else:
                         data = (entry.path, entry.stat().st_mtime)
                         wx.CallAfter(pub.sendMessage,
                                      'update', result=data)
@@ -66,7 +66,7 @@ class SearchSubdirectoriesThread(Thread):
                         data = (full_path, os.stat(full_path).st_mtime)
                         wx.CallAfter(pub.sendMessage,
                                      'update', result=data)
-                    elif self.file_type is not None:
+                    else:
                         data = (full_path, os.stat(full_path).st_mtime)
                         wx.CallAfter(pub.sendMessage,
                                      'update', result=data)
