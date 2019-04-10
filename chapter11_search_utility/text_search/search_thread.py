@@ -3,6 +3,7 @@
 import os
 import subprocess
 import time
+import wx
 
 from configparser import ConfigParser
 from pubsub import pub
@@ -29,11 +30,15 @@ class SearchThread(Thread):
         current_key = ''
         results = {}
         for line in output.split('\n'):
-            if '/home/mdriscoll/py/boomslang' in line:
-                current_key = line
-                results[line] = []
+            if self.folder in line:
+                # Remove the colon off the end of the line
+                current_key = line[:-1]
+                results[current_key] = []
             else:
                 results[current_key].append(line)
         end = time.time()
+        wx.CallAfter(pub.sendMessage,
+                     'update',
+                     results=results)
         wx.CallAfter(pub.sendMessage, 'status', search_time=end-start)
 

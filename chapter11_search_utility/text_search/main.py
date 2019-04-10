@@ -15,10 +15,11 @@ from search_thread import SearchThread
 
 class SearchResult:
 
-    def __init__(self, path, modified_time):
+    def __init__(self, path, modified_time, data):
         self.path = path
         self.modified = time.strftime('%D %H:%M:%S',
                                       time.gmtime(modified_time))
+        self.data = data
 
 
 class MainPanel(wx.Panel):
@@ -66,6 +67,8 @@ class MainPanel(wx.Panel):
         self.search_results_olv = ObjectListView(
             self, style=wx.LC_REPORT | wx.SUNKEN_BORDER)
         self.search_results_olv.SetEmptyListMsg("No Results Found")
+        self.search_results_olv.Bind(wx.EVT_LIST_ITEM_SELECTED,
+                                     self.on_selection)
         self.main_sizer.Add(self.search_results_olv, 1, wx.ALL | wx.EXPAND, 5)
         self.update_ui()
 
@@ -79,6 +82,10 @@ class MainPanel(wx.Panel):
                           ) as dlg:
             if dlg.ShowModal() == wx.ID_OK:
                 self.directory.SetValue(dlg.GetPath())
+
+    def on_selection(self, event):
+        current_selection = self.search_results_olv.GetSelectedObject()
+        self.results_txt.SetValue('\n'.join(current_selection.data))
 
     def on_show_result(self, event):
         """
@@ -133,17 +140,23 @@ class MainPanel(wx.Panel):
                               style= wx.ICON_ERROR) as dlg:
             dlg.ShowModal()
 
-    def update_search_results(self, result):
+    def update_search_results(self, results):
         """
         Called by pubsub from thread
         """
-        path, modified_time = result
-        self.search_results.append(SearchResult(path, modified_time))
-        self.update_ui()
+        for key in results:
+            if os.path.exists(key):
+                stat = os.stat(key)
+                modified_time = stat.st_mtime
+                result = SearchResult(key, modified_time, results[key])
+                self.search_results.append(result)
+
+        if results:
+            self.update_ui()
 
     def update_ui(self):
         self.search_results_olv.SetColumns([
-            ColumnDefn("File Path", "left", 300, "path"),
+            ColumnDefn("File Path", "left", 800, "path"),
             ColumnDefn("Modified Time", "left", 150, "modified")
         ])
         self.search_results_olv.SetObjects(self.search_results)
@@ -153,7 +166,7 @@ class Search(wx.Frame):
 
     def __init__(self):
         super().__init__(None, title='Text Search Utility',
-                         size=(600, 600))
+                         size=(1200, 800))
         pub.subscribe(self.update_status, 'status')
         panel = MainPanel(self)
         self.create_menu()
