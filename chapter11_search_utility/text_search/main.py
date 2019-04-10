@@ -32,7 +32,6 @@ class MainPanel(wx.Panel):
         self.SetSizer(self.main_sizer)
         pub.subscribe(self.update_search_results, 'update')
 
-
         module_path = os.path.dirname(os.path.abspath( __file__ ))
         self.config = os.path.join(module_path, 'config.ini')
         if not os.path.exists(self.config):
