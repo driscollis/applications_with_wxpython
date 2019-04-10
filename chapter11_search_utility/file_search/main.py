@@ -70,7 +70,7 @@ class MainPanel(wx.Panel):
         self.main_sizer.Add(self.search_results_olv, 1, wx.ALL | wx.EXPAND, 5)
         self.update_ui()
 
-        show_result_btn = wx.Button(self, label='Show Result in Browser')
+        show_result_btn = wx.Button(self, label='Open Containing Folder')
         show_result_btn.Bind(wx.EVT_BUTTON, self.on_show_result)
         self.main_sizer.Add(show_result_btn, 0, wx.ALL | wx.CENTER, 5)
 
@@ -104,7 +104,7 @@ class MainPanel(wx.Panel):
                 message = f'Unable to open file manager to {path}'
                 with wx.MessageDialog(None, message=message,
                                       caption='Error',
-                                     style= wx.ICON_ERROR) as dlg:
+                                      style= wx.ICON_ERROR) as dlg:
                     dlg.ShowModal()
 
     def on_search(self, event):
