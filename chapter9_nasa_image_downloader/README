@@ -1,0 +1,11 @@
+You need ObjectListView for this application to work:
+
+https://pypi.org/project/ObjectListView/
+
+pip install ObjectListView
+
+You also need requests:
+
+https://pypi.org/project/requests/
+
+pip install requests

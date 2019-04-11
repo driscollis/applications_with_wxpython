@@ -1,0 +1,9 @@
+You need the following packages for this application to work:
+
+ObjectListView and PyPDF2
+
+https://pypi.org/project/ObjectListView/
+https://pypi.org/project/PyPDF2/
+
+pip install ObjectListView 
+pip install pypdf2

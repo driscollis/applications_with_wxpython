@@ -1,0 +1,12 @@
+You need ObjectListView for this application to work:
+
+https://pypi.org/project/ObjectListView/
+
+pip install ObjectListView
+
+You will also need eyeD3:
+
+https://pypi.org/project/eyeD3/
+
+pip install eyeD3
+
