@@ -38,10 +38,7 @@ class MainPanel(wx.Panel):
             message = 'Unable to find grin3 for text searches. ' \
                        'Install grin3 and open preferences to ' \
                        'configure it:  pip install grin3'
-            with wx.MessageDialog(None, message=message,
-                                  caption='Error',
-                                 style= wx.ICON_ERROR) as dlg:
-                dlg.ShowModal()
+            self.show_error(message)
 
     def create_ui(self):
         # Create a widgets for the search path
@@ -74,6 +71,10 @@ class MainPanel(wx.Panel):
         self.results_txt = wx.TextCtrl(
             self, style=wx.TE_MULTILINE | wx.TE_READONLY)
         self.main_sizer.Add(self.results_txt, 1, wx.ALL | wx.EXPAND, 5)
+
+        show_result_btn = wx.Button(self, label='Open Containing Folder')
+        show_result_btn.Bind(wx.EVT_BUTTON, self.on_show_result)
+        self.main_sizer.Add(show_result_btn, 0, wx.ALL | wx.CENTER, 5)
 
     def on_choose_folder(self, event):
         with wx.DirDialog(self, "Choose a directory:",
