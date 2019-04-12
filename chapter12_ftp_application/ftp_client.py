@@ -105,9 +105,6 @@ class FtpPanel(wx.Panel):
         self.update_ui()
 
     def update_status(self, message):
-        """
-
-        """
         ts = time.strftime(time.strftime('%H:%M:%S',
                                          time.gmtime(time.time()
                                                      )
@@ -136,7 +133,46 @@ class FtpFrame(wx.Frame):
     def __init__(self):
         super().__init__(None, title='PythonFTP', size=(1200, 600))
         panel = FtpPanel(self)
+        self.create_toolbar()
         self.Show()
+
+    def create_toolbar(self):
+        self.toolbar = self.CreateToolBar()
+
+        add_ico = wx.ArtProvider.GetBitmap(
+            wx.ART_GO_UP, wx.ART_TOOLBAR, (16, 16))
+        add_file_tool = self.toolbar.AddTool(
+            wx.ID_ANY, 'Upload File', add_ico,
+            'Upload a file')
+        self.Bind(wx.EVT_MENU, self.on_upload_file,
+                  add_file_tool)
+
+        add_ico = wx.ArtProvider.GetBitmap(
+            wx.ART_GO_DOWN, wx.ART_TOOLBAR, (16, 16))
+        add_file_tool = self.toolbar.AddTool(
+            wx.ID_ANY, 'Download File', add_ico,
+            'Download a file')
+        self.Bind(wx.EVT_MENU, self.on_download_file,
+                  add_file_tool)
+
+        remove_ico = wx.ArtProvider.GetBitmap(
+            wx.ART_MINUS, wx.ART_TOOLBAR, (16, 16))
+        remove_tool = self.toolbar.AddTool(
+            wx.ID_ANY, 'Remove File', remove_ico,
+            'Remove file')
+        self.Bind(wx.EVT_MENU, self.on_remove, remove_tool)
+
+        self.toolbar.Realize()
+
+    def on_upload_file(self, event):
+        pass
+
+    def on_download_file(self, event):
+        pass
+
+    def on_remove(self, event):
+        pass
+
 
 if __name__ == '__main__':
     app = wx.App(False)
