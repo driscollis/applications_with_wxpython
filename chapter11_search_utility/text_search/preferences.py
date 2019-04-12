@@ -8,7 +8,7 @@ from configparser import ConfigParser
 class PreferencesDialog(wx.Dialog):
 
     def __init__(self):
-        super().__init__(None, title='Preferences', size=(600, 400))
+        super().__init__(None, title='Preferences')
         module_path = os.path.dirname(os.path.abspath( __file__ ))
         self.config = os.path.join(module_path, 'config.ini')
         if not os.path.exists(self.config):
