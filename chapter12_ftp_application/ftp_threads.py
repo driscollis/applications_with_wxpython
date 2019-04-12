@@ -6,6 +6,11 @@ import wx
 from pubsub import pub
 from threading import Thread
 
+def send_status(message):
+    wx.CallAfter(pub.sendMessage,
+                 'update_status',
+                 message=message)
+
 
 class Path:
 
@@ -31,9 +36,7 @@ class FTPThread(Thread):
         if self.folder:
             self.ftp.cwd(self.folder)
             message = f'Changing directory: {self.folder}'
-            wx.CallAfter(pub.sendMessage,
-                         'update_status',
-                         message=message)
+            send_status(message)
         self.get_dir_listing()
 
     def get_dir_listing(self):
@@ -74,16 +77,12 @@ class DownloadThread(Thread):
                 with open(self.output, 'wb') as local_file:
                     ftp.retrbinary('RETR ' + path, local_file.write)
                     message = f'Downloaded: {path}'
-                    wx.CallAfter(pub.sendMessage,
-                                 'update_status',
-                                 message=message)
+                    send_status(message)
             except ftplib.error_perm:
                 message = f'ERROR: Unable to download {path}'
-                wx.CallAfter(pub.sendMessage,
-                             'update_status',
-                             message=message)
+                send_status(message)
 
-class UploadThread(Thread):
+class UploadFileThread(Thread):
 
     def __init__(self, ftp, local_folder, paths):
         super().__init__()
