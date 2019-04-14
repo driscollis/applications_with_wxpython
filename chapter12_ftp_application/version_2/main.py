@@ -1,11 +1,10 @@
 # ftp_client.py
 
-import ftplib
 import sys
 import time
 import wx
 
-from ftp_threads import FTPThread
+from ftp_client import FTP
 from ObjectListView import ObjectListView, ColumnDefn
 from pubsub import pub
 
@@ -79,12 +78,9 @@ class FtpPanel(wx.Panel):
         port = int(self.port.GetValue())
 
         if host and username and password and port:
-            self.ftp = ftplib.FTP()
-            self.ftp.set_debuglevel(1)
-            self.ftp.connect(host, port)
-            self.ftp.login(username, password)
-            self.update_status(self.ftp.getwelcome())
-            thread = FTPThread(self.ftp)
+            self.ftp = FTP()
+            self.ftp.connect(port, username, password)
+
 
     def image_getter(self, path):
         if path.folder:
