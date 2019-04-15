@@ -1,6 +1,7 @@
 # ftp_client.py
 
 import sys
+import threading
 import time
 import wx
 
@@ -8,11 +9,17 @@ from ftp_client import FTP
 from ObjectListView import ObjectListView, ColumnDefn
 from pubsub import pub
 
+def send_status(message, topic='update_status'):
+    wx.CallAfter(pub.sendMessage,
+                 topic,
+                 message=message)
+
 
 class FtpPanel(wx.Panel):
 
     def __init__(self, parent):
         super().__init__(parent)
+        self.frame = parent
 
         self.ftp = None
         self.paths = []
@@ -76,11 +83,28 @@ class FtpPanel(wx.Panel):
         username = self.user.GetValue()
         password = self.password.GetValue()
         port = int(self.port.GetValue())
+        self.frame.SetStatusText('Connecting...')
 
         if host and username and password and port:
             self.ftp = FTP()
-            self.ftp.connect(port, username, password)
+            try:
+                self.ftp.disconnect()
+            except:
+                pass
+            args = [self.ftp, host, port, username, password]
+            self.thread = threading.Thread(
+                target=self.connect_thread, args=args)
+            self.thread.daemon = True
+            self.thread.start()
 
+    def change_dir_thread(self, ftp, folder):
+        ftp.change_directory(folder)
+
+    def connect_thread(self, ftp, host, port, username, password):
+        """
+        This method should only be run using a thread
+        """
+        ftp.connect(host, port, username, password)
 
     def image_getter(self, path):
         if path.folder:
@@ -91,7 +115,11 @@ class FtpPanel(wx.Panel):
     def on_change_directory(self, event):
         current_selection = self.remote_server.GetSelectedObject()
         if current_selection.folder:
-            thread = FTPThread(self.ftp, current_selection.filename)
+            self.thread = threading.Thread(
+                target=self.change_dir_thread,
+                args=[self.ftp, current_selection.filename])
+            self.thread.daemon = True
+            self.thread.start()
 
     def update(self, paths):
         """
@@ -130,6 +158,8 @@ class FtpFrame(wx.Frame):
         super().__init__(None, title='PythonFTP', size=(1200, 600))
         panel = FtpPanel(self)
         self.create_toolbar()
+        self.statusbar = self.CreateStatusBar(1)
+        pub.subscribe(self.update_statusbar, 'update_statusbar')
         self.Show()
 
     def create_toolbar(self):
@@ -168,6 +198,9 @@ class FtpFrame(wx.Frame):
 
     def on_remove(self, event):
         pass
+
+    def update_statusbar(self, message):
+        self.SetStatusText(message)
 
 
 if __name__ == '__main__':

@@ -3,10 +3,11 @@ import os
 import wx
 
 from model import Path
+from pubsub import pub
 
-def send_status(message):
+def send_status(message, topic='update_status'):
     wx.CallAfter(pub.sendMessage,
-                 'update_status',
+                 topic,
                  message=message)
 
 
@@ -15,17 +16,22 @@ class FTP:
     def __init__(self, folder=None):
         self.folder = folder
 
-    def connect(host, port, username, password):
-        self.ftp = ftplib.FTP()
-        self.ftp.connect(host, port)
-        self.ftp.login(username, password)
-        self.update_status(self.ftp.getwelcome())
-        thread = FTPThread(self.ftp)
+    def connect(self, host, port, username, password):
+        try:
+            self.ftp = ftplib.FTP()
+            self.ftp.connect(host, port)
+            self.ftp.login(username, password)
+            send_status(self.ftp.getwelcome())
+            send_status('Connected', topic='update_statusbar')
+            self.get_dir_listing()
+        except:
+            send_status('Disconnected', topic='update_statusbar')
 
-        if self.folder:
-            self.ftp.cwd(self.folder)
-            message = f'Changing directory: {self.folder}'
-            send_status(message)
+    def disconnect(self):
+        self.ftp.quit()
+
+    def change_directory(self, folder):
+        self.ftp.cwd(folder)
         self.get_dir_listing()
 
     def get_dir_listing(self):
