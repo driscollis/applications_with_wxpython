@@ -131,7 +131,7 @@ class FtpFrame(wx.Frame):
 
     def __init__(self):
         super().__init__(None, title='PythonFTP', size=(1200, 600))
-        panel = FtpPanel(self)
+        self.panel = FtpPanel(self)
         self.create_toolbar()
         self.Show()
 
