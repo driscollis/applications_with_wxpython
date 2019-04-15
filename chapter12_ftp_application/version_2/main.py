@@ -194,9 +194,6 @@ class FtpFrame(wx.Frame):
 
         self.toolbar.Realize()
 
-    def download_file_thread(self, ftp, paths):
-        pass
-
     def on_upload_file(self, event):
         paths = None
         with wx.FileDialog(
@@ -214,7 +211,6 @@ class FtpFrame(wx.Frame):
                 args=[paths])
             self.thread.daemon = True
             self.thread.start()
-
 
     def on_download_file(self, event):
         local_folder = None
