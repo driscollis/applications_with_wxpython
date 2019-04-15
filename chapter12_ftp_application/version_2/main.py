@@ -1,4 +1,4 @@
-# ftp_client.py
+# main.py
 
 import sys
 import threading

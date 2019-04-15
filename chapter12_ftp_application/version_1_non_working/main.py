@@ -1,4 +1,4 @@
-# ftp_client.py
+# main.py
 
 import ftplib
 import sys
@@ -51,7 +51,6 @@ class FtpPanel(wx.Panel):
         connect_btn = wx.Button(self, label='Connect')
         connect_btn.Bind(wx.EVT_BUTTON, self.on_connect)
         connect_sizer.Add(connect_btn, 0, wx.ALL, 5)
-
         self.main_sizer.Add(connect_sizer)
 
         self.status = wx.TextCtrl(self, style=wx.TE_MULTILINE)
