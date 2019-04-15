@@ -57,6 +57,13 @@ class FTP:
                      'update',
                      paths=paths)
 
+    def delete_file(self, filename):
+        try:
+            self.ftp.sendcmd(f'DELE {filename}')
+            send_status(f'{filename} deleted successfully')
+        except:
+            send_status(f'Unable to delete {filename}')
+
     def download_files(self, paths, local_folder):
         for path in paths:
             try:
@@ -80,3 +87,6 @@ class FTP:
             else:
                 with open(path, 'rb') as fobj:
                     self.ftp.storbinary('STOR ' + path, fobj, 1024)
+            send_status(f'Uploaded {path}')
+        count = len(paths)
+        send_status(f'{count} file(s) uploaded successfully')

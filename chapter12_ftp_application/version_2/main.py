@@ -107,6 +107,10 @@ class FtpPanel(wx.Panel):
         ftp.connect(host, port, username, password)
 
     def image_getter(self, path):
+        """
+        Helper method to determine which image to use in
+        the ObjectListView widget
+        """
         if path.folder:
             return "folder"
         else:
@@ -156,7 +160,7 @@ class FtpFrame(wx.Frame):
 
     def __init__(self):
         super().__init__(None, title='PythonFTP', size=(1200, 600))
-        panel = FtpPanel(self)
+        self.panel = FtpPanel(self)
         self.create_toolbar()
         self.statusbar = self.CreateStatusBar(1)
         pub.subscribe(self.update_statusbar, 'update_statusbar')
@@ -190,14 +194,67 @@ class FtpFrame(wx.Frame):
 
         self.toolbar.Realize()
 
-    def on_upload_file(self, event):
+    def download_file_thread(self, ftp, paths):
         pass
+
+    def on_upload_file(self, event):
+        paths = None
+        with wx.FileDialog(
+            self, message="Choose a file",
+            defaultDir='~',
+            defaultFile="",
+            wildcard=wildcard,
+            style=wx.FD_OPEN | wx.FD_MULTIPLE
+            ) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                paths = dlg.GetPaths()
+        if paths:
+            self.thread = threading.Thread(
+                target=self.panel.ftp.upload_files,
+                args=[paths])
+            self.thread.daemon = True
+            self.thread.start()
+
 
     def on_download_file(self, event):
-        pass
+        local_folder = None
+        selections = self.panel.remote_server.GetSelectedObjects()
+        if not selections:
+            return
+
+        with wx.DirDialog(
+            self, "Choose a directory:",
+            style=wx.DD_DEFAULT_STYLE,
+            defaultPath=self.current_directory) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                local_folder = dlg.GetPath()
+        if local_folder and selections:
+            # Filter out folder selections
+            paths = [path.filename for path in selections
+                     if not path.folder]
+            self.thread = threading.Thread(
+                target=self.panel.ftp.download_files,
+                args=[paths, local_folder])
+            self.thread.daemon = True
+            self.thread.start()
 
     def on_remove(self, event):
-        pass
+        selection = self.panel.remote_server.GetSelectedObject()
+        if not selection:
+            return
+
+        # Ask user if they really want to delete the file
+        with wx.MessageDialog(
+            parent=None,
+            message=f'Do you really want to delete {selection}?',
+            caption='Confirmation',
+            style=wx.OK | wx.CANCEL | wx.ICON_QUESTION) as dlg:
+            if dlg.ShowModal() == wx.ID_OK:
+                self.thread = threading.Thread(
+                    target=self.panel.ftp.delete_file,
+                    args=[selection.filename])
+                self.thread.daemon = True
+                self.thread.start()
 
     def update_statusbar(self, message):
         self.SetStatusText(message)
