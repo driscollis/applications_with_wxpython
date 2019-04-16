@@ -33,7 +33,7 @@ class FtpPanel(wx.Panel):
     def create_ui(self):
         size = (150, -1)
         connect_sizer = wx.BoxSizer()
-        # host, username, password, port, connect button or combo
+        # host, username, password, port, connect button
         host_lbl = wx.StaticText(self, label='Host:')
         connect_sizer.Add(host_lbl, 0, wx.ALL | wx.CENTER, 5)
         self.host = wx.TextCtrl(self, size=size)
@@ -83,7 +83,7 @@ class FtpPanel(wx.Panel):
         username = self.user.GetValue()
         password = self.password.GetValue()
         port = int(self.port.GetValue())
-        self.frame.SetStatusText('Connecting...')
+        self.frame.SetStatusText('Connecting...', 1)
 
         if host and username and password and port:
             self.ftp = FTP()
@@ -133,6 +133,9 @@ class FtpPanel(wx.Panel):
         self.update_ui()
 
     def update_status(self, message):
+        """
+        Called by pubsub / thread
+        """
         ts = time.strftime(time.strftime('%H:%M:%S',
                                          time.gmtime(time.time()
                                                      )
@@ -162,7 +165,8 @@ class FtpFrame(wx.Frame):
         super().__init__(None, title='PythonFTP', size=(1200, 600))
         self.panel = FtpPanel(self)
         self.create_toolbar()
-        self.statusbar = self.CreateStatusBar(1)
+        self.statusbar = self.CreateStatusBar(2)
+        self.statusbar.SetStatusText('Disconnected', 1)
         pub.subscribe(self.update_statusbar, 'update_statusbar')
         self.Show()
 
@@ -195,7 +199,7 @@ class FtpFrame(wx.Frame):
         self.toolbar.Realize()
 
     def on_upload_file(self, event):
-        if self.statusbar.GetStatusText() != 'Connected':
+        if self.statusbar.GetStatusText(1) != 'Connected':
             return
 
         paths = None
@@ -216,7 +220,7 @@ class FtpFrame(wx.Frame):
             self.thread.start()
 
     def on_download_file(self, event):
-        if self.statusbar.GetStatusText() != 'Connected':
+        if self.statusbar.GetStatusText(1) != 'Connected':
             return
 
         local_folder = None
@@ -259,7 +263,7 @@ class FtpFrame(wx.Frame):
                 self.thread.start()
 
     def update_statusbar(self, message):
-        self.SetStatusText(message)
+        self.SetStatusText(message, 1)
 
 
 if __name__ == '__main__':
