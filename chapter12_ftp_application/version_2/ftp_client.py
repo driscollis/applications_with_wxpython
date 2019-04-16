@@ -69,7 +69,7 @@ class FTP:
             try:
                 full_path = os.path.join(local_folder, path)
                 with open(full_path, 'wb') as local_file:
-                    ftp.retrbinary('RETR ' + path, local_file.write)
+                    self.ftp.retrbinary('RETR ' + path, local_file.write)
                     message = f'Downloaded: {path}'
                     send_status(message)
             except ftplib.error_perm:
@@ -83,10 +83,11 @@ class FTP:
 
             if ext in txt_files:
                 with open(path) as fobj:
-                    self.ftp.storlines('STOR ' + path, fobj)
+                    self.ftp.storlines('STOR ' + os.path.basename(path), fobj)
             else:
                 with open(path, 'rb') as fobj:
-                    self.ftp.storbinary('STOR ' + path, fobj, 1024)
+                    self.ftp.storbinary('STOR ' + os.path.basename(path), fobj, 1024)
             send_status(f'Uploaded {path}')
         count = len(paths)
         send_status(f'{count} file(s) uploaded successfully')
+        self.get_dir_listing()

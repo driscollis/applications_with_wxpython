@@ -195,12 +195,15 @@ class FtpFrame(wx.Frame):
         self.toolbar.Realize()
 
     def on_upload_file(self, event):
+        if self.statusbar.GetStatusText() != 'Connected':
+            return
+
         paths = None
         with wx.FileDialog(
             self, message="Choose a file",
             defaultDir='~',
             defaultFile="",
-            wildcard=wildcard,
+            wildcard="All files (*.*)|*.*",
             style=wx.FD_OPEN | wx.FD_MULTIPLE
             ) as dlg:
             if dlg.ShowModal() == wx.ID_OK:
@@ -213,6 +216,9 @@ class FtpFrame(wx.Frame):
             self.thread.start()
 
     def on_download_file(self, event):
+        if self.statusbar.GetStatusText() != 'Connected':
+            return
+
         local_folder = None
         selections = self.panel.remote_server.GetSelectedObjects()
         if not selections:
@@ -221,7 +227,7 @@ class FtpFrame(wx.Frame):
         with wx.DirDialog(
             self, "Choose a directory:",
             style=wx.DD_DEFAULT_STYLE,
-            defaultPath=self.current_directory) as dlg:
+            defaultPath='~') as dlg:
             if dlg.ShowModal() == wx.ID_OK:
                 local_folder = dlg.GetPath()
         if local_folder and selections:
