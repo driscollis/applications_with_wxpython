@@ -41,7 +41,7 @@ class MainPanel(wx.Panel):
             self.show_error(message)
 
     def create_ui(self):
-        # Create a widgets for the search path
+        # Create the widgets for the search path
         row_sizer = wx.BoxSizer()
         lbl = wx.StaticText(self, label='Location:')
         row_sizer.Add(lbl, 0, wx.ALL | wx.CENTER, 5)
