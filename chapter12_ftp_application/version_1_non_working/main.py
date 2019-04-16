@@ -104,6 +104,9 @@ class FtpPanel(wx.Panel):
         self.update_ui()
 
     def update_status(self, message):
+        """
+        Called by pubsub / thread
+        """
         ts = time.strftime(time.strftime('%H:%M:%S',
                                          time.gmtime(time.time()
                                                      )
