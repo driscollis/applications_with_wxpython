@@ -33,6 +33,8 @@ class FTP:
     def change_directory(self, folder):
         self.ftp.cwd(folder)
         self.get_dir_listing()
+        current_directory = self.ftp.pwd()
+        send_status(f'Changed directory to {current_directory}')
 
     def get_dir_listing(self):
         data = []
@@ -62,7 +64,7 @@ class FTP:
 
     def delete_file(self, filename):
         try:
-            self.ftp.sendcmd(f'DELE {filename}')
+            self.ftp.delete(filename)
             send_status(f'{filename} deleted successfully')
             self.get_dir_listing()
         except:
