@@ -45,7 +45,10 @@ class FTP:
             parts = item.split()
             ftype = parts[0]
             size = parts[4]
-            filename = parts[8]
+            if len(parts) > 9:
+                filename = ' '.join(parts[8:])
+            else:
+                filename = parts[8]
             date = '{month} {day} {t}'.format(
                 month=parts[5], day=parts[6], t=parts[7])
             if filename == '.':
@@ -61,6 +64,7 @@ class FTP:
         try:
             self.ftp.sendcmd(f'DELE {filename}')
             send_status(f'{filename} deleted successfully')
+            self.get_dir_listing()
         except:
             send_status(f'Unable to delete {filename}')
 
