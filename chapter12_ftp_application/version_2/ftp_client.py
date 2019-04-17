@@ -1,3 +1,5 @@
+# ftp_client.py
+
 import ftplib
 import os
 import wx
@@ -89,10 +91,12 @@ class FTP:
 
             if ext in txt_files:
                 with open(path) as fobj:
-                    self.ftp.storlines('STOR ' + os.path.basename(path), fobj)
+                    self.ftp.storlines(
+                        'STOR ' + os.path.basename(path), fobj)
             else:
                 with open(path, 'rb') as fobj:
-                    self.ftp.storbinary('STOR ' + os.path.basename(path), fobj, 1024)
+                    self.ftp.storbinary(
+                        'STOR ' + os.path.basename(path), fobj, 1024)
             send_status(f'Uploaded {path}')
         count = len(paths)
         send_status(f'{count} file(s) uploaded successfully')

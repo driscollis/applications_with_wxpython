@@ -57,7 +57,6 @@ class FtpPanel(wx.Panel):
         connect_btn = wx.Button(self, label='Connect')
         connect_btn.Bind(wx.EVT_BUTTON, self.on_connect)
         connect_sizer.Add(connect_btn, 0, wx.ALL, 5)
-
         self.main_sizer.Add(connect_sizer)
 
         self.status = wx.TextCtrl(self, style=wx.TE_MULTILINE)
@@ -98,6 +97,9 @@ class FtpPanel(wx.Panel):
             self.thread.start()
 
     def change_dir_thread(self, ftp, folder):
+        """
+        This method should only be run using a thread
+        """
         ftp.change_directory(folder)
 
     def connect_thread(self, ftp, host, port, username, password):
