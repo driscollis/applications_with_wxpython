@@ -27,7 +27,7 @@ class Result:
         if item.get('links'):
             try:
                 self.thumbnail = item['links'][0]['href']
-            except:
+            except BaseException:
                 self.thumbnail = ''
 
 

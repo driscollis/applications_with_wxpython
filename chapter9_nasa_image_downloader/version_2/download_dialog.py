@@ -32,7 +32,7 @@ class DownloadDialog(wx.Dialog):
         image_json = image_request.json()
         try:
             image_urls = [url['href'] for url in image_json['collection']['items']]
-        except:
+        except BaseException:
             image_urls = []
         return image_urls
 
@@ -73,7 +73,7 @@ class DownloadDialog(wx.Dialog):
                                   caption='Save Successful',
                                   style=wx.ICON_INFORMATION) as dlg:
                 dlg.ShowModal()
-        except:
+        except BaseException:
             message = 'File failed to save!'
             with wx.MessageDialog(None, message=message,
                                   caption='Save Failed',

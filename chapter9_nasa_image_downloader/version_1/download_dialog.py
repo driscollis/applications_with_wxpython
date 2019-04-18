@@ -68,7 +68,7 @@ class DownloadDialog(wx.Dialog):
                                   caption='Save Successful',
                                   style=wx.ICON_INFORMATION) as dlg:
                 dlg.ShowModal()
-        except:
+        except BaseException:
             message = 'File failed to save!'
             with wx.MessageDialog(None, message=message,
                                   caption='Save Failed',
