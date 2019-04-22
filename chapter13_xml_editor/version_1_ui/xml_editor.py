@@ -160,7 +160,7 @@ class XmlEditorPanel(scrolled.ScrolledPanel):
         sizer = wx.BoxSizer(wx.HORIZONTAL)
         self.clear()
 
-        tag_lbl = wx.StaticText(self, label='Tags')
+        tag_lbl = wx.StaticText(self, label='Tag', size=(25, 25))
         value_lbl = wx.StaticText(self, label='Value')
         sizer.Add(tag_lbl, 0, wx.ALL, 5)
         sizer.Add(0, 55, 0)
