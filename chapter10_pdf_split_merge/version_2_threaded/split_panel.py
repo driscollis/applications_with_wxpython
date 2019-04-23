@@ -158,6 +158,14 @@ class SplitPanel(wx.Panel):
             split_options = split_options.strip()
             self.split(input_pdf, output_path, split_options)
 
+    def get_actual_beginning_page(self, page_begin):
+        if page_begin < 0 or page_begin == 1:
+            page_begin = 0
+        if page_begin > 1:
+            # Take off by one error into account
+            page_begin -= 1
+        return page_begin
+
     def split(self, input_pdf, output_path, split_options):
         pdf = PdfFileReader(input_pdf)
         pdf_writer = PdfFileWriter()
@@ -166,18 +174,19 @@ class SplitPanel(wx.Panel):
                      if page]
             for page in pages:
                 pdf_writer.addPage(pdf.getPage(int(page)))
-        else:
+        elif '-' in split_options:
             page_begin, page_end = split_options.split('-')
             page_begin = int(page_begin)
             page_end = int(page_end)
-            if page_begin < 0 or page_begin == 1:
-                page_begin = 0
-            if page_begin > 1:
-                # Take off by one error into account
-                page_begin -= 1
+            page_begin = self.get_actual_beginning_page(page_begin)
 
             for page in range(page_begin, page_end):
                 pdf_writer.addPage(pdf.getPage(page))
+        else:
+            # User only wants a single page
+            page_begin = int(split_options)
+            page_begin = self.get_actual_beginning_page(page_begin)
+            pdf_writer.addPage(pdf.getPage(page_begin))
 
         # Write PDF to disk
         with open(output_path, 'wb') as out:
