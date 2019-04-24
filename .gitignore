@@ -110,3 +110,5 @@ venv.bak/
 *.db
 
 appendix_b_widget_inspection_tool/\.DS_Store
+
+\.DS_Store
