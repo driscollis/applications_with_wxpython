@@ -146,8 +146,9 @@ class MainPanel(wx.Panel):
         """
         Called by pubsub from thread
         """
-        path, modified_time = result
-        self.search_results.append(SearchResult(path, modified_time))
+        if result:
+            path, modified_time = result
+            self.search_results.append(SearchResult(path, modified_time))
         self.update_ui()
 
     def update_ui(self):

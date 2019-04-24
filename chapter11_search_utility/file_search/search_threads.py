@@ -23,16 +23,17 @@ class SearchFolderThread(Thread):
         for entry in os.scandir(self.folder):
             if entry.is_file():
                 if self.case_sensitive:
-                    path = entry.path
+                    path = entry.name
                 else:
-                    path = entry.path.lower()
+                    path = entry.name.lower()
 
                 if self.search_term in path:
                     _, ext = os.path.splitext(entry.path)
                     data = (entry.path, entry.stat().st_mtime)
-                    wx.CallAfter(pub.sendMessage,
-                                 'update', result=data)
+                    wx.CallAfter(pub.sendMessage, 'update', result=data)
         end = time.time()
+        # Always update at the end even if there were no results
+        wx.CallAfter(pub.sendMessage, 'update', result=[])
         wx.CallAfter(pub.sendMessage, 'status', search_time=end-start)
 
 
@@ -60,4 +61,6 @@ class SearchSubdirectoriesThread(Thread):
                     wx.CallAfter(pub.sendMessage,
                                  'update', result=data)
         end = time.time()
+        # Always update at the end even if there were no results
+        wx.CallAfter(pub.sendMessage, 'update', result=[])
         wx.CallAfter(pub.sendMessage, 'status', search_time=end-start)
