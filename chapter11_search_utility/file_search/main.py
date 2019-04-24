@@ -127,6 +127,7 @@ class MainPanel(wx.Panel):
         """
         folder = self.directory.GetValue()
         if folder:
+            self.search_results = []
             SearchSubdirectoriesThread(folder, search_term, file_type,
                                        self.case_sensitive.GetValue())
 
@@ -137,6 +138,7 @@ class MainPanel(wx.Panel):
         """
         folder = self.directory.GetValue()
         if folder:
+            self.search_results = []
             SearchFolderThread(folder, search_term, file_type,
                                self.case_sensitive.GetValue())
 

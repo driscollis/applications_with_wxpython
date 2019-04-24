@@ -132,6 +132,7 @@ class MainPanel(wx.Panel):
             self.show_error(f'Grin location does not exist {grin}')
             return
         if folder:
+            self.search_results = []
             SearchThread(folder, search_term)
 
     def show_error(self, message):
