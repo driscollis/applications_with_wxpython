@@ -29,14 +29,9 @@ class SearchFolderThread(Thread):
 
                 if self.search_term in path:
                     _, ext = os.path.splitext(entry.path)
-                    if self.file_type and self.file_type == ext.lower():
-                        data = (entry.path, entry.stat().st_mtime)
-                        wx.CallAfter(pub.sendMessage,
-                                     'update', result=data)
-                    else:
-                        data = (entry.path, entry.stat().st_mtime)
-                        wx.CallAfter(pub.sendMessage,
-                                     'update', result=data)
+                    data = (entry.path, entry.stat().st_mtime)
+                    wx.CallAfter(pub.sendMessage,
+                                 'update', result=data)
         end = time.time()
         wx.CallAfter(pub.sendMessage, 'status', search_time=end-start)
 
@@ -60,15 +55,9 @@ class SearchSubdirectoriesThread(Thread):
                     full_path = full_path.lower()
 
                 if self.search_term in full_path and os.path.exists(full_path):
-                    _, ext = os.path.splitext(full_path
-                                              )
-                    if self.file_type and self.file_type == ext.lower():
-                        data = (full_path, os.stat(full_path).st_mtime)
-                        wx.CallAfter(pub.sendMessage,
-                                     'update', result=data)
-                    else:
-                        data = (full_path, os.stat(full_path).st_mtime)
-                        wx.CallAfter(pub.sendMessage,
-                                     'update', result=data)
+                    _, ext = os.path.splitext(full_path)
+                    data = (full_path, os.stat(full_path).st_mtime)
+                    wx.CallAfter(pub.sendMessage,
+                                 'update', result=data)
         end = time.time()
         wx.CallAfter(pub.sendMessage, 'status', search_time=end-start)
