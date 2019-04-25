@@ -29,6 +29,7 @@ class PreferencesDialog(wx.Dialog):
         self.grin_location = wx.TextCtrl(self, value=self.grin)
         row_sizer.Add(self.grin_location, 1, wx.ALL | wx.EXPAND, 5)
         browse_button = wx.Button(self, label='Browse')
+        browse_button.Bind(wx.EVT_BUTTON, self.on_browse)
         row_sizer.Add(browse_button, 0, wx.ALL, 5)
         self.main_sizer.Add(row_sizer, 0, wx.EXPAND)
 
@@ -65,3 +66,14 @@ class PreferencesDialog(wx.Dialog):
                               caption='Error',
                               style= wx.ICON_ERROR) as dlg:
             dlg.ShowModal()
+
+    def on_browse(self, event):
+        """
+        Browse for the grin file
+        """
+        wildcard = "All files (*.*)|*.*"
+        with wx.FileDialog(None, "Choose a file",
+                           wildcard=wildcard,
+                           style=wx.ID_OPEN) as dialog:
+            if dialog.ShowModal() == wx.ID_OK:
+                self.grin_location.SetValue(dialog.GetPath())
