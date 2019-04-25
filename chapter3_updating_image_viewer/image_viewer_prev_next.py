@@ -135,9 +135,9 @@ class MainFrame(wx.Frame):
         with wx.DirDialog(self, "Choose a directory",
                           style=wx.DD_DEFAULT_STYLE) as dlg:
             if dlg.ShowModal() == wx.ID_OK:
-                self.folderPath = dlg.GetPath()
+                self.folder_path = dlg.GetPath()
 
-                photos = glob.glob(os.path.join(self.folderPath, '*.jpg'))
+                photos = glob.glob(os.path.join(self.folder_path, '*.jpg'))
                 self.panel.photos = photos
                 if photos:
                     self.panel.update_photo(photos[0])
