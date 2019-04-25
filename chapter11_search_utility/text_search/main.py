@@ -187,7 +187,8 @@ class Search(wx.Frame):
         preferences = file_menu.Append(
             wx.ID_ANY, "Preferences",
             "Open Preferences Dialog")
-        self.Bind(wx.EVT_MENU, self.on_preferences)
+        self.Bind(wx.EVT_MENU, self.on_preferences,
+                  preferences)
 
         exit_menu_item = file_menu.Append(
             wx.ID_ANY, "Exit",
