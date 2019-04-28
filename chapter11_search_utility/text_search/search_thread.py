@@ -34,6 +34,9 @@ class SearchThread(Thread):
                 # Remove the colon off the end of the line
                 current_key = line[:-1]
                 results[current_key] = []
+            elif not current_key:
+                # key not set, so skip it
+                continue
             else:
                 results[current_key].append(line)
         end = time.time()
