@@ -23,8 +23,6 @@ class RecordDialog(wx.Dialog):
             publisher = self.selected_row.publisher
         else:
             book_title = first_name = last_name = isbn = publisher = ""
-        size = (80, -1)
-        font = wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD)
 
         # create the sizers
         main_sizer = wx.BoxSizer(wx.VERTICAL)
@@ -32,6 +30,7 @@ class RecordDialog(wx.Dialog):
         btn_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
         # create some widgets
+        size = (80, -1)
         font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD)
         title_lbl = wx.StaticText(self, label="Title:", size=size)
         title_lbl.SetFont(font)

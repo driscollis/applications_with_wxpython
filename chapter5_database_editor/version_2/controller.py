@@ -3,16 +3,16 @@
 from model import Book, Person, OlvBook
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
- 
+
 
 def add_record(session, data):
     """
-    Data should be a tuple of two dictionaries in the following format:
- 
-    ("author":{"first_name":"John", "last_name":"Doe"},
-     "book":{"title":"Some book", "isbn":"1234567890", 
+    Data should be a dictionary of two dictionaries in the following format:
+
+    {"author":{"first_name":"John", "last_name":"Doe"},
+     "book":{"title":"Some book", "isbn":"1234567890",
              "publisher":"Packt"}
-    )
+    }
     """
     book = Book()
     book.title = data["book"]["title"]
@@ -22,7 +22,7 @@ def add_record(session, data):
     author.first_name = data["author"]["first_name"]
     author.last_name = data["author"]["last_name"]
     book.person = author
-    
+
     session.add(book)
     session.commit()
 
@@ -43,7 +43,7 @@ def convert_results(results):
     """
     books = []
     for record in results:
-        author = "%s %s" % (record.person.first_name, 
+        author = "%s %s" % (record.person.first_name,
                             record.person.last_name)
         book = OlvBook(record.id, record.title, author,
                        record.isbn, record.publisher,
@@ -84,7 +84,7 @@ def get_all_records(session):
     result = session.query(Book).all()
     books = convert_results(result)
     return books
- 
+
 
 def search_records(session, filter_choice, keyword):
     """
@@ -109,7 +109,7 @@ def search_records(session, filter_choice, keyword):
         qry = session.query(Book)
         result = qry.filter(Book.publisher.contains('%s' % keyword)).all()
     books = convert_results(result)
-    
+
     return books
 
 def setup_database():
