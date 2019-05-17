@@ -42,7 +42,7 @@ def main():
         output = pathlib.Path(args.output)
         input_paths = get_paths(args.input_path)
         controller.create_tar(output, archive_objects=input_paths)
-        print(f'Created tarball from {input_path} to {output}')
+        print(f'Created tarball from {args.input_path} to {output}')
 
 if __name__ == '__main__':
     main()
