@@ -1,4 +1,4 @@
-# wxcalculator_no_eval.py
+# CR0604_wxcalculator_no_eval.py
 
 import ast
 import operator
@@ -7,27 +7,27 @@ import wx
 
 
 class CalcPanel(wx.Panel):
-    
+
     def __init__(self, parent):
         super().__init__(parent)
         self.last_button_pressed = None
         self.create_ui()
-        
+
         self.allowed_operators = {
-            ast.Add: operator.add, ast.Sub: operator.sub, 
+            ast.Add: operator.add, ast.Sub: operator.sub,
             ast.Mult: operator.mul, ast.Div: operator.truediv}
-        
+
     def create_ui(self):
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         font = wx.Font(12, wx.MODERN, wx.NORMAL, wx.NORMAL)
-        
+
         self.solution = wx.TextCtrl(self, style=wx.TE_RIGHT)
         self.solution.SetFont(font)
         self.solution.Disable()
         main_sizer.Add(self.solution, 0, wx.EXPAND|wx.ALL, 5)
         self.running_total = wx.StaticText(self)
         main_sizer.Add(self.running_total, 0, wx.ALIGN_RIGHT)
-        
+
         buttons = [['7', '8', '9', '/'],
                    ['4', '5', '6', '*'],
                    ['1', '2', '3', '-'],
@@ -39,23 +39,23 @@ class CalcPanel(wx.Panel):
                 btn_sizer.Add(button, 1, wx.ALIGN_CENTER|wx.EXPAND, 0)
                 button.Bind(wx.EVT_BUTTON, self.update_equation)
             main_sizer.Add(btn_sizer, 1, wx.ALIGN_CENTER|wx.EXPAND)
-        
+
         equals_btn = wx.Button(self, label='=')
         equals_btn.Bind(wx.EVT_BUTTON, self.on_total)
         main_sizer.Add(equals_btn, 0, wx.EXPAND|wx.ALL, 3)
-        
+
         clear_btn = wx.Button(self, label='Clear')
         clear_btn.Bind(wx.EVT_BUTTON, self.on_clear)
         main_sizer.Add(clear_btn, 0, wx.EXPAND|wx.ALL, 3)
-        
+
         self.SetSizer(main_sizer)
-        
+
     def update_equation(self, event):
         operators = ['/', '*', '-', '+']
         btn = event.GetEventObject()
         label = btn.GetLabel()
         current_equation = self.solution.GetValue()
-        
+
         if label not in operators:
             if self.last_button_pressed in operators:
                 self.solution.SetValue(current_equation + ' ' + label)
@@ -64,23 +64,23 @@ class CalcPanel(wx.Panel):
         elif label in operators and current_equation != '' \
              and self.last_button_pressed not in operators:
             self.solution.SetValue(current_equation + ' ' + label)
-        
+
         self.last_button_pressed = label
-        
+
         for item in operators:
             if item in self.solution.GetValue():
                 self.update_solution()
                 break
-            
+
     def noeval(self, expression):
         if isinstance(expression, ast.Num):
             return expression.n
         elif isinstance(expression, ast.BinOp):
             return self.allowed_operators[
-                type(expression.op)](self.noeval(expression.left), 
+                type(expression.op)](self.noeval(expression.left),
                                      self.noeval(expression.right))
         return ''
-        
+
     def update_solution(self):
         try:
             expression = ast.parse(self.solution.GetValue(),
@@ -93,11 +93,11 @@ class CalcPanel(wx.Panel):
             self.solution.SetValue('ZeroDivisionError')
         except:
             pass
-        
+
     def on_clear(self, event):
         self.solution.Clear()
         self.running_total.SetLabel('')
-    
+
     def on_total(self, event):
         solution = self.update_solution()
         if solution:
@@ -105,7 +105,7 @@ class CalcPanel(wx.Panel):
             self.running_total.SetLabel('')
 
 class CalcFrame(wx.Frame):
-    
+
     def __init__(self):
         super().__init__(
             None, title="wxCalculator",

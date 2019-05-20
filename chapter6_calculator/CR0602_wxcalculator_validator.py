@@ -1,4 +1,4 @@
-# wxcalculator_validator.py
+# CR0602_wxcalculator_validator.py
 
 import string
 import wx
