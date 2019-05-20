@@ -1,10 +1,10 @@
-# hello_with_classes_super.py
+# CR0103_hello_with_classes_super.py
 
 import wx
 
 
 class MyFrame(wx.Frame):
-    
+
     def __init__(self):
         super().__init__(None, title='Hello World')
         self.Show()

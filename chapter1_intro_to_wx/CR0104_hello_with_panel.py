@@ -1,17 +1,17 @@
-# hello_with_panel.py
+# CR0104_hello_with_panel.py
 
 import wx
 
 
 class MyPanel(wx.Panel):
-    
+
     def __init__(self, parent):
         super().__init__(parent)
-        
+
         button = wx.Button(self, label='Press Me')
 
 class MyFrame(wx.Frame):
-    
+
     def __init__(self):
         super().__init__(None, title='Hello World')
         panel = MyPanel(self)

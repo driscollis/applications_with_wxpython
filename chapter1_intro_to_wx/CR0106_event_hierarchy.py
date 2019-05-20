@@ -1,4 +1,4 @@
-# event_hierarchy.py
+# CR0106_event_hierarchy.py
 
 import wx
 

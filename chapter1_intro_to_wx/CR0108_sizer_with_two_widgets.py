@@ -1,4 +1,4 @@
-# sizer_with_two_widgets.py
+# CR0108_sizer_with_two_widgets.py
 
 import wx
 

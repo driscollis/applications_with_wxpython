@@ -1,4 +1,4 @@
-# simple_sizer.py
+# CR0107_simple_sizer.py
 
 import wx
 
