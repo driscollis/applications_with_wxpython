@@ -154,6 +154,11 @@ class MainPanel(wx.Panel):
 
         if results:
             self.update_ui()
+        else:
+            search_term = self.search_ctrl.GetValue()
+            self.search_results_olv.ClearAll()
+            msg = f'No Results Found for: "{search_term}"'
+            self.search_results_olv.SetEmptyListMsg(msg)
 
     def update_ui(self):
         self.search_results_olv.SetColumns([
