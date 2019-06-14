@@ -101,7 +101,7 @@ class TaggerPanel(wx.Panel):
     def edit_mp3(self, event):
         selection = self.mp3_olv.GetSelectedObject()
         if selection:
-            with editor.Mp3TagEditorDialog(selection.id3) as dlg:
+            with editor.Mp3TagEditorDialog(selection) as dlg:
                 dlg.ShowModal()
                 self.update_mp3_info()
 

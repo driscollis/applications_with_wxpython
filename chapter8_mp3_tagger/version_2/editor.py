@@ -60,9 +60,13 @@ class Mp3TagEditorDialog(wx.Dialog):
         else:
             new_track_num = (int(self.track_number.GetValue()), 0)
 
-        self.mp3.id3.tag.artist = self.artist.GetValue()
-        self.mp3.id3.tag.album = self.album.GetValue()
-        self.mp3.id3.tag.title = self.title.GetValue()
+        artist = self.artist.GetValue()
+        album = self.album.GetValue()
+        title = self.title.GetValue()
+
+        self.mp3.id3.tag.artist = artist if artist else 'Unknown'
+        self.mp3.id3.tag.album = album if album else 'Unknown'
+        self.mp3.id3.tag.title = title if title else 'Unknown'
         self.mp3.id3.tag.track_num = new_track_num
         self.mp3.id3.tag.save()
         self.mp3.update()
