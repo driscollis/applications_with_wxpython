@@ -9,13 +9,13 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 wildcard = "PDFs (*.pdf)|*.pdf"
 
 
-class CharValidator(wx.PyValidator):
+class CharValidator(wx.Validator):
     '''
     Validates data as it is entered into the text controls.
     '''
 
     def __init__(self, flag):
-        wx.PyValidator.__init__(self)
+        wx.Validator.__init__(self)
         self.flag = flag
         self.Bind(wx.EVT_CHAR, self.OnChar)
 
