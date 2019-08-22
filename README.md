@@ -1,6 +1,6 @@
 # Creating GUI Applications with wxPython
 
-<a href="https://leanpub.com/creatingapplicationswithwxpython/"><img src="https://www.blog.pythonlibrary.org/wp-content/uploads/2019/01/creating_wxpython_apps_thumb.jpg" alt="Jupyter Notebook 101" align="right"></a>
+<a href="https://leanpub.com/creatingapplicationswithwxpython/"><img src="https://www.blog.pythonlibrary.org/wp-content/uploads/2019/01/creating_wxpython_apps_thumb.jpg" alt="Creating GUI Applications with wxPython" align="right"></a>
 
 This is the code repository for the book, **Creating GUI Applications with wxPython** by Michael Driscoll
 
