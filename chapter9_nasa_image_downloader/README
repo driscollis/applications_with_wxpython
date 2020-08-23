@@ -9,3 +9,12 @@ You also need requests:
 https://pypi.org/project/requests/
 
 pip install requests
+
+Finally, you will need pubsub:
+
+https://pypi.org/project/PyPubSub
+
+pip install pypubsub
+
+In python 3.x environments (like Ubuntu 20.04), use 'pip3' instead of 'pip' 
+in the above.
