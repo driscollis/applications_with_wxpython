@@ -1,7 +1,0 @@
-You need the following packages for this application to work:
-
-lxml
-
-https://pypi.org/project/lxml/
-
-pip install lxml
