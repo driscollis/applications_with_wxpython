@@ -9,7 +9,7 @@ class ImagePanel(wx.Panel):
         self.max_size = 240
 
         img = wx.Image(*image_size)
-        self.image_ctrl = wx.StaticBitmap(self, 
+        self.image_ctrl = wx.StaticBitmap(self,
                                           bitmap=wx.Bitmap(img))
 
         browse_btn = wx.Button(self, label='Browse')
@@ -37,29 +37,29 @@ class ImagePanel(wx.Panel):
         wildcard = "JPEG files (*.jpg)|*.jpg"
         with wx.FileDialog(None, "Choose a file",
                            wildcard=wildcard,
-                           style=wx.ID_OPEN) as dialog:
+                           style=wx.FD_OPEN) as dialog:
             if dialog.ShowModal() == wx.ID_OK:
                 self.photo_txt.SetValue(dialog.GetPath())
                 self.load_image()
-        
+
     def load_image(self):
         """
         Load the image and display it to the user
         """
         filepath = self.photo_txt.GetValue()
         img = wx.Image(filepath, wx.BITMAP_TYPE_ANY)
-        
+
         # scale the image, preserving the aspect ratio
         W = img.GetWidth()
         H = img.GetHeight()
         if W > H:
             NewW = self.max_size
-            NewH = self.max_size * H / W
+            NewH = int(self.max_size * H / W)
         else:
             NewH = self.max_size
-            NewW = self.max_size * W / H
+            NewW = int(self.max_size * W / H)
         img = img.Scale(NewW,NewH)
-        
+
         self.image_ctrl.SetBitmap(wx.Bitmap(img))
         self.Refresh()
 
