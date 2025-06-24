@@ -5,7 +5,7 @@ import editor
 import glob
 import wx
 
-from ObjectListView import ObjectListView, ColumnDefn
+from ObjectListView3 import ObjectListView, ColumnDefn
 
 class Mp3:
 
@@ -26,15 +26,9 @@ class Mp3:
             id3.tag.title = self.normalize_mp3(
                 id3.tag.title)
             self.title = id3.tag.title
-            if hasattr(id3.tag, 'best_release_date'):
-                if not isinstance(
-                    id3.tag.best_release_date, type(None)):
-                    self.year = self.normalize_mp3(
-                        id3.tag.best_release_date.year)
-                else:
-                    id3.tag.release_date = 2019
-                    self.year = self.normalize_mp3(
-                        id3.tag.best_release_date.year)
+            self.year = self.normalize_mp3(
+                id3.tag.getBestDate())
+
         else:
             tag = id3.initTag()
             tag.release_date = 2019
@@ -57,7 +51,7 @@ class Mp3:
         self.artist = self.id3.tag.artist
         self.album = self.id3.tag.album
         self.title = self.id3.tag.title
-        self.year = self.id3.tag.best_release_date.year
+        self.year = self.id3.tag.getBestDate()
 
 
 class TaggerPanel(wx.Panel):

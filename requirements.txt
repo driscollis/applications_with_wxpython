@@ -1,3 +1,4 @@
+eyeD3
 PyPubSub
 sqlalchemy==2.0.41
 wxpython

@@ -16,7 +16,7 @@ class Mp3TagEditorDialog(wx.Dialog):
 
         size = (200, -1)
         track_num = str(self.mp3.id3.tag.track_num[0])
-        year = str(self.mp3.id3.tag.best_release_date.year)
+        year = str(self.mp3.id3.tag.getBestDate())
 
         self.track_number = wx.TextCtrl(
             self, value=track_num, size=size)

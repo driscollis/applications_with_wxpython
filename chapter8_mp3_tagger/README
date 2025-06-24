@@ -2,7 +2,7 @@ You need ObjectListView for this application to work:
 
 https://pypi.org/project/ObjectListView/
 
-pip install ObjectListView
+pip install ObjectListView3
 
 You will also need eyeD3:
 
