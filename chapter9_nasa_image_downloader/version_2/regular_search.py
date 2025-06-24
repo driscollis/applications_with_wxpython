@@ -5,7 +5,7 @@ import requests
 import wx
 
 from download_dialog import DownloadDialog
-from ObjectListView import ObjectListView, ColumnDefn
+from ObjectListView3 import ObjectListView, ColumnDefn
 from pubsub import pub
 from urllib.parse import urlencode, quote_plus
 
@@ -99,7 +99,7 @@ class RegularSearch(wx.Panel):
             else:
                 NewH = self.max_size
                 NewW = self.max_size * W / H
-            img = img.Scale(NewW,NewH)
+            img = img.Scale(int(NewW), int(NewH))
         else:
             img = wx.Image(240, 240)
 
