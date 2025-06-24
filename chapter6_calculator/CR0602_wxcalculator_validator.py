@@ -67,9 +67,9 @@ class CalcPanel(wx.Panel):
             btn_sizer = wx.BoxSizer()
             for label in label_list:
                 button = wx.Button(self, label=label)
-                btn_sizer.Add(button, 1, wx.ALIGN_CENTER|wx.EXPAND, 0)
+                btn_sizer.Add(button, 1, wx.EXPAND, 0)
                 button.Bind(wx.EVT_BUTTON, self.on_calculate)
-            main_sizer.Add(btn_sizer, 1, wx.ALIGN_CENTER|wx.EXPAND)
+            main_sizer.Add(btn_sizer, 1, wx.EXPAND)
 
         equals_btn = wx.Button(self, label='=')
         equals_btn.Bind(wx.EVT_BUTTON, self.on_total)

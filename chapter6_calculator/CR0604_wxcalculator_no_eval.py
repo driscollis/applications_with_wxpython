@@ -36,9 +36,9 @@ class CalcPanel(wx.Panel):
             btn_sizer = wx.BoxSizer()
             for label in label_list:
                 button = wx.Button(self, label=label)
-                btn_sizer.Add(button, 1, wx.ALIGN_CENTER|wx.EXPAND, 0)
+                btn_sizer.Add(button, 1, wx.EXPAND, 0)
                 button.Bind(wx.EVT_BUTTON, self.update_equation)
-            main_sizer.Add(btn_sizer, 1, wx.ALIGN_CENTER|wx.EXPAND)
+            main_sizer.Add(btn_sizer, 1, wx.EXPAND)
 
         equals_btn = wx.Button(self, label='=')
         equals_btn.Bind(wx.EVT_BUTTON, self.on_total)
@@ -73,8 +73,8 @@ class CalcPanel(wx.Panel):
                 break
 
     def noeval(self, expression):
-        if isinstance(expression, ast.Num):
-            return expression.n
+        if isinstance(expression, ast.Constant):
+            return expression.value
         elif isinstance(expression, ast.BinOp):
             return self.allowed_operators[
                 type(expression.op)](self.noeval(expression.left),

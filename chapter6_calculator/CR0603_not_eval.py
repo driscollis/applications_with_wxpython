@@ -7,8 +7,8 @@ allowed_operators = {ast.Add: operator.add, ast.Sub: operator.sub,
                      ast.Mult: operator.mul, ast.Div: operator.truediv}
 
 def noeval(expression):
-    if isinstance(expression, ast.Num):
-        return expression.n
+    if isinstance(expression, ast.Constant):
+        return expression.value
     elif isinstance(expression, ast.BinOp):
         print('Operator: {}'.format(expression.op))
         print('Left operand: {}'.format(expression.left))
