@@ -90,7 +90,7 @@ class ImagePanel(wx.Panel):
         else:
             NewH = self.max_size
             NewW = self.max_size * W / H
-        img = img.Scale(NewW, NewH)
+        img = img.Scale(int(NewW), int(NewH))
 
         self.image_ctrl.SetBitmap(wx.Bitmap(img))
         self.Refresh()
