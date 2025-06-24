@@ -6,7 +6,7 @@ import wx
 class MyPanel(wx.Panel):
 
     def __init__(self, parent):
-        super(MyPanel, self).__init__(parent)
+        super().__init__(parent)
 
         button = wx.Button(self, label='Press Me', pos=(100, 10))
 
@@ -14,7 +14,7 @@ class MyPanel(wx.Panel):
 class MyFrame(wx.Frame):
 
     def __init__(self):
-        super(MyFrame, self).__init__(None, title='Hello World')
+        super().__init__(None, title='Hello World')
         panel = MyPanel(self)
         self.Show()
 
