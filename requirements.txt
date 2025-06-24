@@ -1,2 +1,3 @@
 PyPubSub
+sqlalchemy==2.0.41
 wxpython
