@@ -2,12 +2,11 @@
 
 import controller
 
-import os
 import pathlib
 import time
 import wx
 
-from ObjectListView import ObjectListView, ColumnDefn
+from ObjectListView3 import ObjectListView, ColumnDefn
 
 
 class Items:

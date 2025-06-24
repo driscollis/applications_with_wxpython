@@ -2,13 +2,11 @@
 
 import controller
 
-import os
 import pathlib
 import time
 import wx
-import wx.lib.agw.multidirdialog as MDD
 
-from ObjectListView import ObjectListView, ColumnDefn
+from ObjectListView3 import ObjectListView, ColumnDefn
 
 open_wildcard = "All files (*.*)|*.*"
 
