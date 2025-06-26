@@ -67,7 +67,7 @@ class NewPage(wx.Panel):
         xml_editor_notebook.AddPage(attribute_panel, 'Attributes')
 
         splitter.SplitVertically(tree_panel, xml_editor_notebook)
-        splitter.SetMinimumPaneSize(self.size[0] / 2)
+        splitter.SetMinimumPaneSize(int(self.size[0] / 2))
         page_sizer.Add(splitter, 1, wx.ALL|wx.EXPAND, 5)
 
         self.SetSizer(page_sizer)

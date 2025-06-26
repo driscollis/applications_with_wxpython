@@ -81,15 +81,15 @@ class MainFrame(wx.Frame):
 
         # add menu items to the file menu
         open_menu_item = file_menu.Append(
-            wx.NewId(), 'Open', '')
+            wx.NewIdRef(), 'Open', '')
         self.Bind(wx.EVT_MENU, self.on_open, open_menu_item)
 
         save_menu_item = file_menu.Append(
-            wx.NewId(), 'Save', '')
+            wx.NewIdRef(), 'Save', '')
         self.Bind(wx.EVT_MENU, self.on_save, save_menu_item)
 
         exit_menu_item = file_menu.Append(
-            wx.NewId(), 'Quit', '')
+            wx.NewIdRef(), 'Quit', '')
         self.Bind(wx.EVT_MENU, self.on_exit, exit_menu_item)
         menu_bar.Append(file_menu, "&File")
 

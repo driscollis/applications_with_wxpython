@@ -6,6 +6,8 @@ import wx
 import wx.adv
 import wx.lib.agw.flatnotebook as fnb
 
+from datetime import datetime
+
 from editor_page import NewPage
 from pubsub import pub
 from xml_viewer import XmlViewer
@@ -26,6 +28,7 @@ class Boomslang(wx.Frame):
         self.opened_files = []
         self.last_opened_file = None
         self.current_page = None
+        self.today = datetime.now()
 
         self.current_directory = os.path.expanduser('~')
         self.app_location = os.path.dirname(os.path.abspath( sys.argv[0] ))
@@ -83,24 +86,24 @@ class Boomslang(wx.Frame):
 
         # add menu items to the file menu
         open_menu_item = file_menu.Append(
-            wx.NewId(), 'Open', '')
+            wx.NewIdRef(), 'Open', '')
         self.Bind(wx.EVT_MENU, self.on_open, open_menu_item)
 
         sub_menu = self.create_recent_items()
-        file_menu.Append(wx.NewId(), 'Recent', sub_menu)
+        file_menu.Append(wx.NewIdRef(), 'Recent', sub_menu)
 
         save_menu_item = file_menu.Append(
-            wx.NewId(), 'Save', '')
+            wx.NewIdRef(), 'Save', '')
         self.Bind(wx.EVT_MENU, self.on_save, save_menu_item)
 
         exit_menu_item = file_menu.Append(
-            wx.NewId(), 'Quit', '')
+            wx.NewIdRef(), 'Quit', '')
         self.Bind(wx.EVT_MENU, self.on_exit, exit_menu_item)
         menu_bar.Append(file_menu, "&File")
 
         # add menu items to the help menu
         about_menu_item = help_menu.Append(
-            wx.NewId(), 'About')
+            wx.NewIdRef(), 'About')
         self.Bind(wx.EVT_MENU, self.on_about_box, about_menu_item)
         menu_bar.Append(help_menu, '&Help')
 
@@ -166,7 +169,7 @@ class Boomslang(wx.Frame):
         # Create status bar
         self.status_bar = self.CreateStatusBar(1)
 
-        msg = 'Welcome to Boomslang XML (c) Michael Driscoll - 2017-2019'
+        msg = f'Welcome to Boomslang XML (c) Michael Driscoll - 2017-{self.today.year}'
         self.status_bar.SetStatusText(msg)
 
     def create_recent_items(self):
@@ -179,7 +182,7 @@ class Boomslang(wx.Frame):
             try:
                 with open(self.recent_files_path) as fobj:
                     for line in fobj:
-                        menu_id = wx.NewId()
+                        menu_id = wx.NewIdRef()
                         submenu.Append(menu_id, line)
                         self.recent_dict[menu_id] = line.strip()
                         self.Bind(wx.EVT_MENU,
@@ -193,9 +196,8 @@ class Boomslang(wx.Frame):
         """
         This function is called via PubSub to update the frame's status
         """
-        print('Autosaving to {} @ {}'.format(save_path, time.ctime()))
-        msg = 'Autosaved at {}'.format(time.strftime('%H:%M:%S',
-                                                     time.localtime()))
+        print(f'Autosaving to {save_path} @ {time.ctime()}')
+        msg = f'Autosaved at {self.today:%H:%M:%}'
         self.status_bar.SetStatusText(msg)
 
         self.changed = True
@@ -214,11 +216,10 @@ class Boomslang(wx.Frame):
             utils.warn_nothing_to_save()
             return
 
-        pub.sendMessage('save_{}'.format(self.current_page.page_id))
+        pub.sendMessage(f'save_{self.current_page.page_id}')
 
         self.changed = False
-        msg = 'Last saved at {}'.format(time.strftime('%H:%M:%S',
-                                                      time.localtime()))
+        msg = f'Last saved at {self.today:%H:%M:%S}'
         self.status_bar.SetStatusText(msg)
 
     def on_about_box(self, event):
@@ -228,7 +229,7 @@ class Boomslang(wx.Frame):
         info = wx.adv.AboutDialogInfo()
         info.Name = "About Boomslang"
         info.Version = "0.1 Beta"
-        info.Copyright = "(C) 2017-2019 Mike Driscoll"
+        info.Copyright = f"(C) 2017-{self.today.year} Mike Driscoll"
         info.Description = wordwrap(
             "Boomslang is a Python-based XML editor ",
             350, wx.ClientDC(self.panel))
@@ -245,13 +246,13 @@ class Boomslang(wx.Frame):
         Event handler that is fired when an XML node is added to the
         selected node
         """
-        pub.sendMessage('add_node_{}'.format(self.current_page.page_id))
+        pub.sendMessage(f'add_node_{self.current_page.page_id}'
 
     def on_remove_node(self, event):
         """
         Event handler that is fired when an XML node is removed
         """
-        pub.sendMessage('remove_node_{}'.format(self.current_page.page_id))
+        pub.sendMessage(f'remove_node_{self.current_page.page_id}')
 
     def on_open(self, event):
         """
