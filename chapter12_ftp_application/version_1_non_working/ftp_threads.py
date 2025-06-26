@@ -1,6 +1,5 @@
 # ftp_threads.py
 
-import os
 import wx
 
 from pubsub import pub

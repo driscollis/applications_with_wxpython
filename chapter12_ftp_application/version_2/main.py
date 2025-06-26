@@ -1,12 +1,11 @@
 # main.py
 
-import sys
 import threading
 import time
 import wx
 
 from ftp_client import FTP
-from ObjectListView import ObjectListView, ColumnDefn
+from ObjectListView3 import ObjectListView, ColumnDefn
 from pubsub import pub
 
 def send_status(message, topic='update_status'):

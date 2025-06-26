@@ -1,12 +1,11 @@
 # main.py
 
 import ftplib
-import sys
 import time
 import wx
 
 from ftp_threads import FTPThread
-from ObjectListView import ObjectListView, ColumnDefn
+from ObjectListView3 import ObjectListView, ColumnDefn
 from pubsub import pub
 
 
