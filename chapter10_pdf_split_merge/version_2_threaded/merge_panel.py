@@ -6,7 +6,7 @@ import wx
 
 from ObjectListView import ObjectListView, ColumnDefn
 from pubsub import pub
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from pypdf import PdfReader, PdfWriter
 from threading import Thread
 
 wildcard = "PDFs (*.pdf)|*.pdf"
@@ -21,13 +21,13 @@ class MergeThread(Thread):
         self.start()
 
     def run(self):
-        pdf_writer = PdfFileWriter()
+        pdf_writer = PdfWriter()
         page_count = 1
 
         for obj in self.objects:
-            pdf_reader = PdfFileReader(obj.full_path)
-            for page in range(pdf_reader.getNumPages()):
-                pdf_writer.addPage(pdf_reader.getPage(page))
+            pdf_reader = PdfReader(obj.full_path)
+            for page in range(pdf_reader.get_num_pages()):
+                pdf_writer.add_page(pdf_reader.get_page(page))
                 wx.CallAfter(pub.sendMessage, 'update',
                              msg=page_count)
                 page_count += 1
@@ -89,8 +89,8 @@ class Pdf:
         self.filename = os.path.basename(pdf_path)
         try:
             with open(pdf_path, 'rb') as f:
-                pdf = PdfFileReader(f)
-                number_of_pages = pdf.getNumPages()
+                pdf = PdfReader(f)
+                number_of_pages = pdf.get_num_pages()
         except:
             number_of_pages = 0
         self.number_of_pages = str(number_of_pages)

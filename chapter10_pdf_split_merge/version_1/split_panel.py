@@ -4,7 +4,7 @@ import os
 import string
 import wx
 
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from pypdf import PdfReader, PdfWriter
 
 wildcard = "PDFs (*.pdf)|*.pdf"
 
@@ -167,13 +167,13 @@ class SplitPanel(wx.Panel):
         return page_begin
 
     def split(self, input_pdf, output_path, split_options):
-        pdf = PdfFileReader(input_pdf)
-        pdf_writer = PdfFileWriter()
+        pdf = PdfReader(input_pdf)
+        pdf_writer = PdfWriter()
         if ',' in split_options:
             pages = [page for page in split_options.split(',')
                      if page]
             for page in pages:
-                pdf_writer.addPage(pdf.getPage(int(page)))
+                pdf_writer.add_page(pdf.get_page(int(page)))
         elif '-' in split_options:
             page_begin, page_end = split_options.split('-')
             page_begin = int(page_begin)
@@ -181,12 +181,12 @@ class SplitPanel(wx.Panel):
             page_begin = self.get_actual_beginning_page(page_begin)
 
             for page in range(page_begin, page_end):
-                pdf_writer.addPage(pdf.getPage(page))
+                pdf_writer.add_page(pdf.get_page(page))
         else:
             # User only wants a single page
             page_begin = int(split_options)
             page_begin = self.get_actual_beginning_page(page_begin)
-            pdf_writer.addPage(pdf.getPage(page_begin))
+            pdf_writer.add_page(pdf.get_page(page_begin))
 
         # Write PDF to disk
         with open(output_path, 'wb') as out:

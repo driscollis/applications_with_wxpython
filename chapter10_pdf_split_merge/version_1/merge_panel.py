@@ -4,8 +4,8 @@ import os
 import glob
 import wx
 
-from ObjectListView import ObjectListView, ColumnDefn
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from ObjectListView3 import ObjectListView, ColumnDefn
+from pypdf import PdfReader, PdfWriter
 
 wildcard = "PDFs (*.pdf)|*.pdf"
 
@@ -28,8 +28,8 @@ class Pdf:
         self.filename = os.path.basename(pdf_path)
         try:
             with open(pdf_path, 'rb') as f:
-                pdf = PdfFileReader(f)
-                number_of_pages = pdf.getNumPages()
+                pdf = PdfReader(f)
+                number_of_pages = pdf.get_num_pages()
         except:
             number_of_pages = 0
         self.number_of_pages = str(number_of_pages)
@@ -117,14 +117,14 @@ class MergePanel(wx.Panel):
             self.merge(path)
 
     def merge(self, output_path):
-        pdf_writer = PdfFileWriter()
+        pdf_writer = PdfWriter()
 
         objects = self.pdf_olv.GetObjects()
 
         for obj in objects:
-            pdf_reader = PdfFileReader(obj.full_path)
-            for page in range(pdf_reader.getNumPages()):
-                pdf_writer.addPage(pdf_reader.getPage(page))
+            pdf_reader = PdfReader(obj.full_path)
+            for page in range(pdf_reader.get_num_pages()):
+                pdf_writer.add_page(pdf_reader.get_page(page))
 
         with open(output_path, 'wb') as fh:
             pdf_writer.write(fh)
