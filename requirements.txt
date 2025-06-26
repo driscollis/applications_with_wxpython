@@ -1,4 +1,5 @@
 eyeD3
+grin3
 pypdf
 PyPubSub
 sqlalchemy==2.0.41

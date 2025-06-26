@@ -7,7 +7,7 @@ import time
 import wx
 
 from configparser import ConfigParser, NoSectionError
-from ObjectListView import ObjectListView, ColumnDefn
+from ObjectListView3 import ObjectListView, ColumnDefn
 from preferences import PreferencesDialog
 from pubsub import pub
 from search_thread import SearchThread

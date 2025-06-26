@@ -6,7 +6,7 @@ import subprocess
 import time
 import wx
 
-from ObjectListView import ObjectListView, ColumnDefn
+from ObjectListView3 import ObjectListView, ColumnDefn
 from pubsub import pub
 from search_threads import SearchFolderThread, SearchSubdirectoriesThread
 
