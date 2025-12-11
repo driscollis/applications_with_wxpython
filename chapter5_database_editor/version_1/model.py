@@ -1,9 +1,10 @@
 # model.py
 
-from sqlalchemy import Table, Column, create_engine
+from sqlalchemy import Column, create_engine
 from sqlalchemy import Integer, ForeignKey, String, Unicode
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import backref, relation
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 engine = create_engine("sqlite:///books.db", echo=True)
 Base = declarative_base()
@@ -15,7 +16,7 @@ class OlvBook(object):
     Book model for ObjectListView
     """
 
-    def __init__(self, id, title, author, isbn, publisher, 
+    def __init__(self, id, title, author, isbn, publisher,
                  last_name, first_name):
         self.id = id  # unique row id from database
         self.title = title
@@ -31,8 +32,9 @@ class Person(Base):
     __tablename__ = "people"
 
     id = Column(Integer, primary_key=True)
-    first_name = Column("first_name", String(50))
-    last_name = Column("last_name", String(50))
+    first_name = mapped_column("first_name", String(50))
+    last_name = mapped_column("last_name", String(50))
+    books = relationship("Book", back_populates="person")
 
     def __repr__(self):
         """"""
@@ -44,10 +46,10 @@ class Book(Base):
     __tablename__ = "books"
 
     id = Column(Integer, primary_key=True)
-    author_id = Column(Integer, ForeignKey("people.id"))
-    title = Column("title", Unicode)
-    isbn = Column("isbn", Unicode)
-    publisher = Column("publisher", Unicode)
-    person = relation("Person", backref="books", cascade_backrefs=False)
+    author_id = mapped_column(Integer, ForeignKey("people.id"))
+    title = mapped_column("title", Unicode)
+    isbn = mapped_column("isbn", Unicode)
+    publisher = mapped_column("publisher", Unicode)
+    person = relationship("Person", back_populates="books")
 
 metadata.create_all(engine)

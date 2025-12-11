@@ -43,8 +43,7 @@ def convert_results(results):
     """
     books = []
     for record in results:
-        author = "%s %s" % (record.person.first_name,
-                            record.person.last_name)
+        author = f"{record.person.first_name} {record.person.last_name}"
         book = OlvBook(record.id, record.title, author,
                        record.isbn, record.publisher,
                        record.person.last_name,

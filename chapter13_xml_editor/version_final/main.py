@@ -246,7 +246,7 @@ class Boomslang(wx.Frame):
         Event handler that is fired when an XML node is added to the
         selected node
         """
-        pub.sendMessage(f'add_node_{self.current_page.page_id}'
+        pub.sendMessage(f'add_node_{self.current_page.page_id}')
 
     def on_remove_node(self, event):
         """
